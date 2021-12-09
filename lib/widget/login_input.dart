@@ -1,3 +1,4 @@
+import 'package:bilibili/db/hi_cache.dart';
 import 'package:bilibili/util/color.dart';
 import 'package:flutter/material.dart';
 
@@ -25,9 +26,12 @@ class LoginInput extends StatefulWidget {
   /// 输入框类型 纯数字输入 普通输入 等
   final TextInputType? keyboardType;
 
+  final TextEditingController? editingController;
+
   LoginInput(this.title, this.hint,
       {this.onChanged,
       this.focusChanged,
+      this.editingController,
       this.lineStretch = false,
       this.obscureText = false,
       this.keyboardType});
@@ -97,7 +101,9 @@ class _LoginInputState extends State<LoginInput> {
       obscureText: widget.obscureText,
       keyboardType: widget.keyboardType,
       autofocus: !widget.obscureText,
-      cursorColor: primary, // 光标颜色
+      // 光标颜色
+      cursorColor: primary,
+      controller: widget.editingController,
       style: const TextStyle(
           fontSize: 16, color: Colors.black, fontWeight: FontWeight.w300),
       // 输入框的样式

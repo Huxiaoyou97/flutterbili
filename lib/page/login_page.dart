@@ -1,13 +1,16 @@
+import 'package:bilibili/dao/login_dao.dart';
+import 'package:bilibili/db/hi_cache.dart';
+import 'package:bilibili/http/core/hi_error.dart';
+import 'package:bilibili/util/string_util.dart';
+import 'package:bilibili/util/toast.dart';
 import 'package:bilibili/widget/appbar.dart';
+import 'package:bilibili/widget/login_button.dart';
 import 'package:bilibili/widget/login_effect.dart';
 import 'package:bilibili/widget/login_input.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
-
-  final VoidCallback? onJumpToLogin;
-
-  LoginPage({this.onJumpToLogin});
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -20,37 +23,34 @@ class _LoginPageState extends State<LoginPage> {
   bool loginEnable = false;
 
   /// 用户名
-  String userName;
+  String? userName;
 
   /// 密码
-  String password;
+  String? password;
 
-  /// 再次输入密码
-  String rePassword;
-
-  /// 慕课网id
-  String imoocId;
-
-  /// 订单id
-  String orderId;
-
+  @override
+  void initState() {
+    super.initState();
+    String? value = HiCache.getInstance().get<String>("userName");
+    print("value----$value");
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar("注册", "登录", widget.onJumpToLogin!),
+      appBar: appBar("密码登录", "注册", () {}),
       body: Container(
         child: ListView(
-          // 自适应键盘弹起  防止遮挡
           children: [
             LoginEffect(protect: protect),
             LoginInput(
               "用户名",
               "请输入用户名",
+              editingController: TextEditingController(text: userName),
               onChanged: (text) {
+                print(text);
                 userName = text;
                 checkInput();
-                print("LoginInput: $text");
               },
             ),
             LoginInput(
@@ -58,9 +58,9 @@ class _LoginPageState extends State<LoginPage> {
               "请输入密码",
               obscureText: true,
               onChanged: (text) {
+                print(text);
                 password = text;
                 checkInput();
-                print("LoginInput: $text");
               },
               focusChanged: (focus) {
                 setState(() {
@@ -68,11 +68,47 @@ class _LoginPageState extends State<LoginPage> {
                 });
               },
             ),
+            Padding(
+              padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
+              child: LoginButton(
+                "登录",
+                enable: loginEnable,
+                onPressed: _send,
+              ),
+            )
           ],
         ),
       ),
     );
   }
 
-  void checkInput() {}
+  void checkInput() {
+    bool enable;
+    if (isNotEmpty(userName) && isNotEmpty(password)) {
+      enable = true;
+    } else {
+      enable = false;
+    }
+
+    setState(() {
+      loginEnable = enable;
+    });
+  }
+
+  _send() async {
+    try {
+      var result = await LoginDao.login(userName!, password!);
+      if (result["code"] == 0) {
+        HiCache.getInstance().setString("userName", userName!);
+
+        showSuccessToast("登录成功");
+      } else {
+        showErrorToast(result["msg"]);
+      }
+    } on NeedAuth catch (e) {
+      showErrorToast(e.message);
+    } on HiNetError catch (e) {
+      showErrorToast(e.message);
+    }
+  }
 }

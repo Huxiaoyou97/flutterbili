@@ -1,7 +1,10 @@
 import 'package:bilibili/dao/login_dao.dart';
+import 'package:bilibili/db/hi_cache.dart';
 import 'package:bilibili/http/core/hi_error.dart';
 import 'package:bilibili/util/string_util.dart';
+import 'package:bilibili/util/toast.dart';
 import 'package:bilibili/widget/appbar.dart';
+import 'package:bilibili/widget/login_button.dart';
 import 'package:bilibili/widget/login_effect.dart';
 import 'package:bilibili/widget/login_input.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +19,7 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+
   bool protect = false;
 
   /// 按钮是否可以点击 默认不可点击
@@ -35,6 +39,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   /// 订单id
   String? orderId;
+
 
   @override
   Widget build(BuildContext context) {
@@ -102,8 +107,12 @@ class _RegisterPageState extends State<RegisterPage> {
               },
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
-              child: _LoginButton(),
+              padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
+              child: LoginButton(
+                "注册",
+                enable: loginEnable,
+                onPressed: checkParams,
+              ),
             )
           ],
         ),
@@ -149,18 +158,18 @@ class _RegisterPageState extends State<RegisterPage> {
           await LoginDao.register(userName!, password!, imoocId!, orderId!);
       // var result = await LoginDao.login("huxiaoyou", "Mace0000");
       if (result["code"] == 0) {
-        print("注册成功");
+        showSuccessToast("注册成功");
 
         if (widget.onJumpToLogin != null) {
           widget.onJumpToLogin!();
         }
       } else {
-        print(result["message"]);
+        showErrorToast(result["msg"]);
       }
     } on NeedAuth catch (e) {
-      print("NeedAuth: $e");
+      showErrorToast("NeedAuth: $e");
     } on HiNetError catch (e) {
-      print("HiNetError: $e");
+      showErrorToast("HiNetError: $e");
     }
   }
 

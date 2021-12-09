@@ -7,159 +7,146 @@ import 'package:bilibili/http/core/hi_net.dart';
 import 'package:bilibili/http/request/notic_request.dart';
 import 'package:bilibili/http/request/test_request.dart';
 import 'package:bilibili/model/owner.dart';
+import 'package:bilibili/model/video_model.dart';
+import 'package:bilibili/navigator/hi_navigator.dart';
+import 'package:bilibili/page/home_page.dart';
+import 'package:bilibili/page/login_page.dart';
 import 'package:bilibili/page/register_page.dart';
+import 'package:bilibili/page/video_detail_page.dart';
 import 'package:bilibili/util/color.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const BiliApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class BiliApp extends StatefulWidget {
+  const BiliApp({Key? key}) : super(key: key);
+
+  @override
+  _BiliAppState createState() => _BiliAppState();
+}
+
+class _BiliAppState extends State<BiliApp> {
+  final BiliRouteDelegate _routeDelegate = BiliRouteDelegate();
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: white,
-      ),
-      home: RegisterPage(
-        onJumpToLogin: () {
-          print("click");
+    return FutureBuilder<HiCache>(
+
+        /// 进行初始化
+        future: HiCache.preInit(),
+        builder: (BuildContext context, AsyncSnapshot<HiCache> snapshot) {
+          var widget = snapshot.connectionState == ConnectionState.done
+              ? Router(
+                  routerDelegate: _routeDelegate,
+                )
+              : const Scaffold(
+                  body: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+
+          return MaterialApp(
+            home: widget,
+            theme: ThemeData(primarySwatch: white),
+          );
+        });
+  }
+}
+
+class BiliRouteDelegate extends RouterDelegate<BiliRoutePath>
+    with ChangeNotifier, PopNavigatorRouterDelegateMixin<BiliRoutePath> {
+  @override
+  final GlobalKey<NavigatorState> navigatorKey;
+
+  /// 为 Navigator 设置一个key，必要的时候可以通过navigatorKey.currentState来获取NavigatorState对象
+  BiliRouteDelegate() : navigatorKey = GlobalKey<NavigatorState>();
+
+  /// 当前路由状态
+  RouteStatus _routeStatus = RouteStatus.home;
+
+  /// 存放所有的页面
+  List<MaterialPage> pages = [];
+
+  VideoModel? videoModel;
+
+  @override
+  Widget build(BuildContext context) {
+    var index = getPageIndex(pages, routeStatus);
+
+    List<MaterialPage> tempPages = pages;
+
+    /// 当前页面是否存在堆栈中 如果存在直接出栈 无需重新创建页面 避免性能消耗
+    if (index != -1) {
+      /// 要打开的页面在栈中已存在，则将该页面和它上面的所有页面进行出栈
+      /// tips 具体规则可以根据需要进行调整，这里要求栈中只允许有一个同样的页面的示例
+      tempPages = tempPages.sublist(0, index);
+    }
+
+    var page;
+    if (routeStatus == RouteStatus.home) {
+      /// 跳转到首页时将栈中其它的页面出栈，因为首先不可回退
+      pages.clear();
+      page = pageWrap(HomePage(
+        onJumpToDetail: (videoModel) {
+          this.videoModel = videoModel;
+          notifyListeners();
         },
-      ),
+      ));
+    } else if (routeStatus == RouteStatus.detail) {
+      page = pageWrap(VideoDetailPage(videoModel!));
+    } else if (routeStatus == RouteStatus.register) {
+      page = pageWrap(RegisterPage(
+        onJumpToLogin: () {
+          _routeStatus = RouteStatus.login;
+          notifyListeners();
+        },
+      ));
+    } else if (routeStatus == RouteStatus.login) {
+      page = pageWrap(LoginPage());
+    }
+
+    /// 重新创建一个数组，否则pages因引用没有改变路由不会生效
+    tempPages = [...tempPages, page];
+
+    pages = tempPages;
+
+    return Navigator(
+      key: navigatorKey,
+      pages: pages,
+      onPopPage: (route, result) {
+        // 在这里可以控制是否可以返回
+        if (!route.didPop(result)) {
+          return false;
+        }
+        return true;
+      },
     );
   }
-}
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    HiCache.preInit();
-  }
-
-  void _incrementCounter() async {
-    testNotice();
-  }
-
-  void testNotice() async {
-    try {
-      var notice = await HiNet.getInstance().fire(NoticRequest());
-      print("notice: $notice");
-    } on HiNetError catch (e) {
-      print("testNotice: ${e.message}");
+  RouteStatus get routeStatus {
+    if (_routeStatus != RouteStatus.register && !hasLogin) {
+      return _routeStatus = RouteStatus.login;
+    } else if (videoModel != null) {
+      return _routeStatus = RouteStatus.detail;
+    } else {
+      return _routeStatus;
     }
   }
 
-  void testLogin() async {
-    try {
-      // var result = await LoginDao.register("huxiaoyou", "Mace0000", "9492498", "0419");
-      var result = await LoginDao.login("huxiaoyou", "Mace0000");
-      print("result: $result");
-    } on NeedAuth catch (e) {
-      print("NeedAuth: $e");
-    } on HiNetError catch (e) {
-      print("HiNetError: $e");
-    }
-  }
-
-  void test() {
-    const jsonString =
-        "{ \"name\": \"flutter\", \"url\": \"https://coding.imooc.com/class/487.html\" }";
-
-    // json 转 map
-    var jsonMap = jsonDecode(jsonString);
-    print(jsonMap['name']);
-    print(jsonMap['url']);
-
-    // map 转 json
-    String json = jsonEncode(jsonMap);
-    print(json);
-  }
-
-  void test1() {
-    var ownerMap = {
-      "name": "伊零Onezero",
-      "face":
-          "http://i2.hdslb.com/bfs/face/1c57a17a7b077ccd19dba58a981a673799b85aef.jpg",
-      "fans": 12
-    };
-
-    Owner owner = Owner.fromJson(ownerMap);
-    print(owner.name);
-    print(owner.face);
-    print(owner.fans);
-  }
-
-  void test2() {
-    HiCache.getInstance().setString("aa", "123456");
-    var value = HiCache.getInstance().get("aa");
-    print("value: $value");
-  }
+  /// 用户是否登录
+  bool get hasLogin => LoginDao.getBoardingPass() != null;
 
   @override
-  Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
-  }
+  Future<void> setNewRoutePath(BiliRoutePath path) async {}
+}
+
+/// 定义路由数据, path
+class BiliRoutePath {
+  final String location;
+
+  BiliRoutePath.home() : location = "/";
+
+  BiliRoutePath.detail() : location = "/detail";
 }
