@@ -14,6 +14,7 @@ import 'package:bilibili/page/login_page.dart';
 import 'package:bilibili/page/register_page.dart';
 import 'package:bilibili/page/video_detail_page.dart';
 import 'package:bilibili/util/color.dart';
+import 'package:bilibili/util/toast.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -104,7 +105,16 @@ class BiliRouteDelegate extends RouterDelegate<BiliRoutePath>
         },
       ));
     } else if (routeStatus == RouteStatus.login) {
-      page = pageWrap(LoginPage());
+      page = pageWrap(LoginPage(
+        onJumpRegister: () {
+          _routeStatus = RouteStatus.register;
+          notifyListeners();
+        },
+        onSuccess: () {
+          _routeStatus = RouteStatus.home;
+          notifyListeners();
+        },
+      ));
     }
 
     /// 重新创建一个数组，否则pages因引用没有改变路由不会生效
@@ -112,16 +122,30 @@ class BiliRouteDelegate extends RouterDelegate<BiliRoutePath>
 
     pages = tempPages;
 
-    return Navigator(
-      key: navigatorKey,
-      pages: pages,
-      onPopPage: (route, result) {
-        // 在这里可以控制是否可以返回
-        if (!route.didPop(result)) {
-          return false;
-        }
-        return true;
-      },
+    return WillPopScope(
+      /// 修复安卓物理返回键无法返回上一页的问题
+      child: Navigator(
+        key: navigatorKey,
+        pages: pages,
+        onPopPage: (route, result) {
+          if (route.settings is MaterialPage) {
+            // 登录页未登录返回拦截
+            if((route.settings as MaterialPage).child is LoginPage) {
+              if (!hasLogin) {
+                showWarnToast("请先登录");
+                return false;
+              }
+            }
+          }
+          // 执行返回操作
+          if (!route.didPop(result)) {
+            return false;
+          }
+          pages.removeLast();
+          return true;
+        },
+      ),
+      onWillPop: () async => !await navigatorKey.currentState!.maybePop(),
     );
   }
 

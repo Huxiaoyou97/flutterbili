@@ -10,7 +10,12 @@ import 'package:bilibili/widget/login_input.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+
+  final VoidCallback? onJumpRegister;
+  final VoidCallback? onSuccess;
+
+
+  LoginPage({this.onJumpRegister, this.onSuccess});
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -31,14 +36,14 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    String? value = HiCache.getInstance().get<String>("userName");
-    print("value----$value");
+    // String? value = HiCache.getInstance().get<String>("userName");
+    // print("value----$value");
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar("密码登录", "注册", () {}),
+      appBar: appBar("密码登录", "注册", widget.onJumpRegister!),
       body: Container(
         child: ListView(
           children: [
@@ -46,7 +51,7 @@ class _LoginPageState extends State<LoginPage> {
             LoginInput(
               "用户名",
               "请输入用户名",
-              editingController: TextEditingController(text: userName),
+              // editingController: TextEditingController(text: userName),
               onChanged: (text) {
                 print(text);
                 userName = text;
@@ -100,8 +105,10 @@ class _LoginPageState extends State<LoginPage> {
       var result = await LoginDao.login(userName!, password!);
       if (result["code"] == 0) {
         HiCache.getInstance().setString("userName", userName!);
-
         showSuccessToast("登录成功");
+        if (widget.onSuccess != null) {
+          widget.onSuccess!();
+        }
       } else {
         showErrorToast(result["msg"]);
       }
