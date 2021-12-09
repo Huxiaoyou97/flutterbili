@@ -1,6 +1,14 @@
+import 'dart:convert';
+
+import 'package:bilibili/dao/login_dao.dart';
+import 'package:bilibili/db/hi_cache.dart';
 import 'package:bilibili/http/core/hi_error.dart';
 import 'package:bilibili/http/core/hi_net.dart';
+import 'package:bilibili/http/request/notic_request.dart';
 import 'package:bilibili/http/request/test_request.dart';
+import 'package:bilibili/model/owner.dart';
+import 'package:bilibili/page/register_page.dart';
+import 'package:bilibili/util/color.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -10,40 +18,21 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
+        primarySwatch: white,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: RegisterPage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
   final String title;
 
   @override
@@ -53,20 +42,69 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
-  void _incrementCounter() async {
-    TestRequest request = TestRequest();
-    request.add("aa", "ddd").add("bb", "333");
+  @override
+  void initState() {
+    super.initState();
+    HiCache.preInit();
+  }
 
+  void _incrementCounter() async {
+    testNotice();
+  }
+
+  void testNotice() async {
     try {
-      var result = await HiNet.getInstance().fire(request);
-      print(result);
-    } on NeedAuth catch (e) {
-      print(e);
-    } on NeedLogin catch (e) {
-      print(e);
+      var notice = await HiNet.getInstance().fire(NoticRequest());
+      print("notice: $notice");
     } on HiNetError catch (e) {
-      print(e);
+      print("testNotice: ${e.message}");
     }
+  }
+
+  void testLogin() async {
+    try {
+      // var result = await LoginDao.register("huxiaoyou", "Mace0000", "9492498", "0419");
+      var result = await LoginDao.login("huxiaoyou", "Mace0000");
+      print("result: $result");
+    } on NeedAuth catch (e) {
+      print("NeedAuth: $e");
+    } on HiNetError catch (e) {
+      print("HiNetError: $e");
+    }
+  }
+
+  void test() {
+    const jsonString =
+        "{ \"name\": \"flutter\", \"url\": \"https://coding.imooc.com/class/487.html\" }";
+
+    // json 转 map
+    var jsonMap = jsonDecode(jsonString);
+    print(jsonMap['name']);
+    print(jsonMap['url']);
+
+    // map 转 json
+    String json = jsonEncode(jsonMap);
+    print(json);
+  }
+
+  void test1() {
+    var ownerMap = {
+      "name": "伊零Onezero",
+      "face":
+          "http://i2.hdslb.com/bfs/face/1c57a17a7b077ccd19dba58a981a673799b85aef.jpg",
+      "fans": 12
+    };
+
+    Owner owner = Owner.fromJson(ownerMap);
+    print(owner.name);
+    print(owner.face);
+    print(owner.fans);
+  }
+
+  void test2() {
+    HiCache.getInstance().setString("aa", "123456");
+    var value = HiCache.getInstance().get("aa");
+    print("value: $value");
   }
 
   @override

@@ -1,3 +1,5 @@
+import 'package:bilibili/dao/login_dao.dart';
+
 /// 请求类型
 enum HttpMethod { POST, GET, DELETE }
 
@@ -38,6 +40,11 @@ abstract class BaseRequest {
       uri = Uri.https(authority(), pathStr, params);
     } else {
       uri = Uri.http(authority(), pathStr, params);
+    }
+
+    /// 判断是否需要携带token
+    if (needLogin()) {
+      addHeader(LoginDao.BOARDING_PASS, LoginDao.getBoardingPass());
     }
 
     print("url:${uri.toString()}");
