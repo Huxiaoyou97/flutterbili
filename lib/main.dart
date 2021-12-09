@@ -62,7 +62,17 @@ class BiliRouteDelegate extends RouterDelegate<BiliRoutePath>
   final GlobalKey<NavigatorState> navigatorKey;
 
   /// 为 Navigator 设置一个key，必要的时候可以通过navigatorKey.currentState来获取NavigatorState对象
-  BiliRouteDelegate() : navigatorKey = GlobalKey<NavigatorState>();
+  BiliRouteDelegate() : navigatorKey = GlobalKey<NavigatorState>() {
+    /// 实现调换逻辑
+    HiNavigator.getInstance().registerRouteJump(
+        RouteJumpListener(onJumpTo: (RouteStatus routeStatus, {Map? args}) {
+      _routeStatus = routeStatus;
+      if (_routeStatus == RouteStatus.detail) {
+        videoModel = args!["videoMo"];
+      }
+      notifyListeners();
+    }));
+  }
 
   /// 当前路由状态
   RouteStatus _routeStatus = RouteStatus.home;
@@ -89,32 +99,13 @@ class BiliRouteDelegate extends RouterDelegate<BiliRoutePath>
     if (routeStatus == RouteStatus.home) {
       /// 跳转到首页时将栈中其它的页面出栈，因为首先不可回退
       pages.clear();
-      page = pageWrap(HomePage(
-        onJumpToDetail: (videoModel) {
-          this.videoModel = videoModel;
-          notifyListeners();
-        },
-      ));
+      page = pageWrap(HomePage());
     } else if (routeStatus == RouteStatus.detail) {
       page = pageWrap(VideoDetailPage(videoModel!));
     } else if (routeStatus == RouteStatus.register) {
-      page = pageWrap(RegisterPage(
-        onJumpToLogin: () {
-          _routeStatus = RouteStatus.login;
-          notifyListeners();
-        },
-      ));
+      page = pageWrap(RegisterPage());
     } else if (routeStatus == RouteStatus.login) {
-      page = pageWrap(LoginPage(
-        onJumpRegister: () {
-          _routeStatus = RouteStatus.register;
-          notifyListeners();
-        },
-        onSuccess: () {
-          _routeStatus = RouteStatus.home;
-          notifyListeners();
-        },
-      ));
+      page = pageWrap(LoginPage());
     }
 
     /// 重新创建一个数组，否则pages因引用没有改变路由不会生效
@@ -130,7 +121,7 @@ class BiliRouteDelegate extends RouterDelegate<BiliRoutePath>
         onPopPage: (route, result) {
           if (route.settings is MaterialPage) {
             // 登录页未登录返回拦截
-            if((route.settings as MaterialPage).child is LoginPage) {
+            if ((route.settings as MaterialPage).child is LoginPage) {
               if (!hasLogin) {
                 showWarnToast("请先登录");
                 return false;
