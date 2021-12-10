@@ -54,17 +54,17 @@ class RouteStatusInfo {
 /// 感知当前页面是否压后台
 
 class HiNavigator extends _RouteJumpListener {
-  static HiNavigator? _instance;
+  static HiNavigator _instance;
 
-  RouteJumpListener? _routeJump;
+  RouteJumpListener _routeJump;
 
   List<RouteChangeListener> _listeners = [];
 
   /// 打开过的页面
-  RouteStatusInfo? _current;
+  RouteStatusInfo _current;
 
   /// 首页底部tab
-  RouteStatusInfo? _bottomTab;
+  RouteStatusInfo _bottomTab;
 
   HiNavigator._();
 
@@ -72,13 +72,13 @@ class HiNavigator extends _RouteJumpListener {
     if (_instance == null) {
       _instance = HiNavigator._();
     }
-    return _instance!;
+    return _instance;
   }
 
   /// 首页底部tab切换监听
   void onBottomTabChange(int index, Widget page) {
     _bottomTab = RouteStatusInfo(RouteStatus.home, page);
-    _notify(_bottomTab!);
+    _notify(_bottomTab);
   }
 
   /// 注册路由跳转逻辑
@@ -100,11 +100,11 @@ class HiNavigator extends _RouteJumpListener {
 
   /// 路由跳转
   @override
-  void onJumpTo(RouteStatus routeStatus, {Map? args}) {
+  void onJumpTo(RouteStatus routeStatus, {Map args}) {
     if (args != null) {
-      _routeJump?.onJumpTo(routeStatus, args: args);
+      _routeJump.onJumpTo(routeStatus, args: args);
     } else {
-      _routeJump?.onJumpTo(routeStatus);
+      _routeJump.onJumpTo(routeStatus);
     }
   }
 
@@ -112,7 +112,7 @@ class HiNavigator extends _RouteJumpListener {
   void notify(List<MaterialPage> currentPages, List<MaterialPage> prePages) {
     if (currentPages == prePages) return;
     var current =
-    RouteStatusInfo(getStatus(currentPages.last), currentPages.last.child);
+        RouteStatusInfo(getStatus(currentPages.last), currentPages.last.child);
 
     _notify(current);
   }
@@ -120,15 +120,14 @@ class HiNavigator extends _RouteJumpListener {
   void _notify(RouteStatusInfo current) {
     if (current.page is BottomNavigator && _bottomTab != null) {
       /// 如果打开的是首页，则明确到首页具体的tab
-      current = _bottomTab!;
+      current = _bottomTab;
     }
-
 
     print("hi_navigator:current: ${current.page}");
     print("hi_navigator:pre: ${_current?.page}");
     for (var listener in _listeners) {
       if (_current != null) {
-        listener(current, _current!);
+        listener(current, _current);
       } else {
         listener(current, current);
       }
@@ -148,5 +147,5 @@ typedef OnJumpTo = void Function(RouteStatus routeStatus, {Map args});
 class RouteJumpListener {
   final OnJumpTo onJumpTo;
 
-  RouteJumpListener({required this.onJumpTo});
+  RouteJumpListener({this.onJumpTo});
 }

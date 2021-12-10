@@ -24,7 +24,7 @@ void main() {
 }
 
 class BiliApp extends StatefulWidget {
-  const BiliApp({Key? key}) : super(key: key);
+  const BiliApp({Key key}) : super(key: key);
 
   @override
   _BiliAppState createState() => _BiliAppState();
@@ -67,10 +67,10 @@ class BiliRouteDelegate extends RouterDelegate<BiliRoutePath>
   BiliRouteDelegate() : navigatorKey = GlobalKey<NavigatorState>() {
     /// 实现调换逻辑
     HiNavigator.getInstance().registerRouteJump(
-        RouteJumpListener(onJumpTo: (RouteStatus routeStatus, {Map? args}) {
+        RouteJumpListener(onJumpTo: (RouteStatus routeStatus, {Map args}) {
       _routeStatus = routeStatus;
       if (_routeStatus == RouteStatus.detail) {
-        videoModel = args!["videoMo"];
+        videoModel = args["videoMo"];
       }
       notifyListeners();
     }));
@@ -82,7 +82,7 @@ class BiliRouteDelegate extends RouterDelegate<BiliRoutePath>
   /// 存放所有的页面
   List<MaterialPage> pages = [];
 
-  VideoModel? videoModel;
+  VideoModel videoModel;
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +103,7 @@ class BiliRouteDelegate extends RouterDelegate<BiliRoutePath>
       pages.clear();
       page = pageWrap(BottomNavigator());
     } else if (routeStatus == RouteStatus.detail) {
-      page = pageWrap(VideoDetailPage(videoModel!));
+      page = pageWrap(VideoDetailPage(videoModel));
     } else if (routeStatus == RouteStatus.register) {
       page = pageWrap(RegisterPage());
     } else if (routeStatus == RouteStatus.login) {
@@ -145,7 +145,7 @@ class BiliRouteDelegate extends RouterDelegate<BiliRoutePath>
           return true;
         },
       ),
-      onWillPop: () async => !await navigatorKey.currentState!.maybePop(),
+      onWillPop: () async => !await navigatorKey.currentState.maybePop(),
     );
   }
 

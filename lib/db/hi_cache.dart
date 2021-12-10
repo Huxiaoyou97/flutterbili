@@ -2,13 +2,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 /// 缓存管理类
 class HiCache {
-  SharedPreferences? prefs;
+  SharedPreferences prefs;
 
   HiCache._() {
     init();
   }
 
-  static HiCache? _instance;
+  static HiCache _instance;
 
   HiCache._pre(this.prefs);
 
@@ -18,12 +18,12 @@ class HiCache {
       var prefs = await SharedPreferences.getInstance();
       _instance = HiCache._pre(prefs);
     }
-    return _instance!;
+    return _instance;
   }
 
   static HiCache getInstance() {
     _instance ??= HiCache._();
-    return _instance!;
+    return _instance;
   }
 
   void init() async {
@@ -50,7 +50,7 @@ class HiCache {
     prefs?.setStringList(key, value);
   }
 
-  T? get<T>(String key) {
+  T get<T>(String key) {
     var result = prefs?.get(key);
     if (result != null) {
       return result as T;

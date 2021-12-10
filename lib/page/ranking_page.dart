@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
  /// 排行榜
 class RankingPage extends StatefulWidget {
-  const RankingPage({Key? key}) : super(key: key);
+  const RankingPage({Key key}) : super(key: key);
 
   @override
   _RankingPageState createState() => _RankingPageState();

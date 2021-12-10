@@ -11,7 +11,7 @@ import 'package:bilibili/widget/login_input.dart';
 import 'package:flutter/material.dart';
 
 class RegisterPage extends StatefulWidget {
-  const RegisterPage({Key? key}) : super(key: key);
+  const RegisterPage({Key key}) : super(key: key);
 
   @override
   _RegisterPageState createState() => _RegisterPageState();
@@ -24,19 +24,19 @@ class _RegisterPageState extends State<RegisterPage> {
   bool loginEnable = false;
 
   /// 用户名
-  String? userName;
+  String userName;
 
   /// 密码
-  String? password;
+  String password;
 
   /// 再次输入密码
-  String? rePassword;
+  String rePassword;
 
   /// 慕课网id
-  String? imoocId;
+  String imoocId;
 
   /// 订单id
-  String? orderId;
+  String orderId;
 
   @override
   Widget build(BuildContext context) {
@@ -154,7 +154,7 @@ class _RegisterPageState extends State<RegisterPage> {
   void send() async {
     try {
       var result =
-          await LoginDao.register(userName!, password!, imoocId!, orderId!);
+          await LoginDao.register(userName, password, imoocId, orderId);
       // var result = await LoginDao.login("huxiaoyou", "Mace0000");
       if (result["code"] == 0) {
         showSuccessToast("注册成功");
@@ -170,10 +170,10 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   void checkParams() {
-    String? tips;
+    String tips;
     if (password != rePassword) {
       tips = "两次密码不一致";
-    } else if (orderId!.length != 4) {
+    } else if (orderId.length != 4) {
       tips = "请输入订单号的后四位";
     }
 

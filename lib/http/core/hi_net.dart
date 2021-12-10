@@ -6,17 +6,17 @@ import 'package:bilibili/http/request/base_request.dart';
 class HiNet {
   HiNet._();
 
-  static HiNet? _instance;
+  static HiNet _instance;
 
   static HiNet getInstance() {
     if (_instance == null) {
       _instance = HiNet._();
     }
-    return _instance!;
+    return _instance;
   }
 
   Future fire(BaseRequest request) async {
-    HiNetResponse? response;
+    HiNetResponse response;
     var error;
     try {
       response = await send(request);
@@ -35,7 +35,6 @@ class HiNet {
     }
 
     var result = response?.data;
-    printLog(result);
 
     var status = response?.statusCode;
     switch (status) {

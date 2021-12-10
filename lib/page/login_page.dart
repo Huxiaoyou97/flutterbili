@@ -22,10 +22,10 @@ class _LoginPageState extends State<LoginPage> {
   bool loginEnable = false;
 
   /// 用户名
-  String? userName;
+  String userName;
 
   /// 密码
-  String? password;
+  String password;
 
   @override
   void initState() {
@@ -98,9 +98,9 @@ class _LoginPageState extends State<LoginPage> {
 
   _send() async {
     try {
-      var result = await LoginDao.login(userName!, password!);
+      var result = await LoginDao.login(userName, password);
       if (result["code"] == 0) {
-        HiCache.getInstance().setString("userName", userName!);
+        HiCache.getInstance().setString("userName", userName);
         showSuccessToast("登录成功");
         HiNavigator.getInstance().onJumpTo(RouteStatus.home);
       } else {

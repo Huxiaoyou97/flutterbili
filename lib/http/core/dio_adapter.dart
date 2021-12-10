@@ -34,7 +34,7 @@ class DioApapter extends HiNetAdapter {
   }
 
   /// 构建 HiNetResponse
-  Future<HiNetResponse<T>> buildRes<T>(Response? response, BaseRequest request) {
+  Future<HiNetResponse<T>> buildRes<T>(Response response, BaseRequest request) {
     return Future.value(
         HiNetResponse(
           data: response?.data,

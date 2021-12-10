@@ -16,16 +16,16 @@ class HiNetResponse<T> {
       this.statusMessage,
       this.extra});
 
-  T? data;
+  T data;
 
   /// 请求
-  BaseRequest? request;
+  BaseRequest request;
 
   /// http状态码
-  int? statusCode;
+  int statusCode;
 
   /// message
-  String? statusMessage;
+  String statusMessage;
 
   dynamic extra;
 

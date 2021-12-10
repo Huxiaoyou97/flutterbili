@@ -5,9 +5,9 @@ class Owner {
     this.fans,
   });
 
-  String? name;
-  String? face;
-  int? fans;
+  String name;
+  String face;
+  int fans;
 
   factory Owner.fromJson(Map<String, dynamic> json) => Owner(
         name: json["name"],

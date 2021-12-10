@@ -20,24 +20,24 @@ class TestMo {
     this.size,
   });
 
-  String? id;
-  String? vid;
-  String? title;
-  String? tname;
-  String? url;
-  String? cover;
-  int? pubdate;
-  String? desc;
-  int? view;
-  int? duration;
-  Owner? owner;
-  int? reply;
-  int? favorite;
-  int? like;
-  int? coin;
-  int? share;
-  DateTime? createTime;
-  int? size;
+  String id;
+  String vid;
+  String title;
+  String tname;
+  String url;
+  String cover;
+  int pubdate;
+  String desc;
+  int view;
+  int duration;
+  Owner owner;
+  int reply;
+  int favorite;
+  int like;
+  int coin;
+  int share;
+  DateTime createTime;
+  int size;
 
   factory TestMo.fromJson(Map<String, dynamic> json) => TestMo(
         id: json["id"],
@@ -89,9 +89,9 @@ class Owner {
     this.fans,
   });
 
-  String? name;
-  String? face;
-  int? fans;
+  String name;
+  String face;
+  int fans;
 
   factory Owner.fromJson(Map<String, dynamic> json) => Owner(
         name: json["name"],

@@ -7,9 +7,9 @@ class HomeModel {
     this.videoList,
   });
 
-  List<BannerModel>? bannerList;
-  List<CategoryModel>? categoryList;
-  List<VideoModel>? videoList;
+  List<BannerModel> bannerList;
+  List<CategoryModel> categoryList;
+  List<VideoModel> videoList;
 
   factory HomeModel.fromJson(Map<String, dynamic> json) => HomeModel(
     bannerList: List<BannerModel>.from(json["bannerList"].map((x) => BannerModel.fromJson(x))),
@@ -18,9 +18,9 @@ class HomeModel {
   );
 
   Map<String, dynamic> toJson() => {
-    "bannerList": List<dynamic>.from(bannerList!.map((x) => x.toJson())),
-    "categoryList": List<dynamic>.from(categoryList!.map((x) => x.toJson())),
-    "videoList": List<dynamic>.from(videoList!.map((x) => x.toJson())),
+    "bannerList": List<dynamic>.from(bannerList.map((x) => x.toJson())),
+    "categoryList": List<dynamic>.from(categoryList.map((x) => x.toJson())),
+    "videoList": List<dynamic>.from(videoList.map((x) => x.toJson())),
   };
 }
 
@@ -36,14 +36,14 @@ class BannerModel {
     this.createTime,
   });
 
-  String? id;
-  int? sticky;
-  String? type;
-  String? title;
-  String? subtitle;
-  String? url;
-  String? cover;
-  DateTime? createTime;
+  String id;
+  int sticky;
+  String type;
+  String title;
+  String subtitle;
+  String url;
+  String cover;
+  DateTime createTime;
 
   factory BannerModel.fromJson(Map<String, dynamic> json) => BannerModel(
     id: json["id"],
@@ -64,7 +64,7 @@ class BannerModel {
     "subtitle": subtitle,
     "url": url,
     "cover": cover,
-    "createTime": createTime?.toIso8601String(),
+    "createTime": createTime.toIso8601String(),
   };
 }
 
@@ -74,8 +74,8 @@ class CategoryModel {
     this.count,
   });
 
-  String? name;
-  int? count;
+  String name;
+  int count;
 
   factory CategoryModel.fromJson(Map<String, dynamic> json) => CategoryModel(
     name: json["name"],
@@ -110,24 +110,24 @@ class VideoModel {
     this.size,
   });
 
-  String? id;
-  String? vid;
-  String? title;
-  String? tname;
-  String? url;
-  String? cover;
-  int? pubdate;
-  String? desc;
-  int? view;
-  int? duration;
-  Owner? owner;
-  int? reply;
-  int? favorite;
-  int? like;
-  int? coin;
-  int? share;
-  DateTime? createTime;
-  int? size;
+  String id;
+  String vid;
+  String title;
+  String tname;
+  String url;
+  String cover;
+  int pubdate;
+  String desc;
+  int view;
+  int duration;
+  Owner owner;
+  int reply;
+  int favorite;
+  int like;
+  int coin;
+  int share;
+  DateTime createTime;
+  int size;
 
   factory VideoModel.fromJson(Map<String, dynamic> json) => VideoModel(
     id: json["id"],
@@ -161,13 +161,13 @@ class VideoModel {
     "desc": desc,
     "view": view,
     "duration": duration,
-    "owner": owner?.toJson(),
+    "owner": owner.toJson(),
     "reply": reply,
     "favorite": favorite,
     "like": like,
     "coin": coin,
     "share": share,
-    "createTime": createTime?.toIso8601String(),
+    "createTime": createTime.toIso8601String(),
     "size": size,
   };
 }
@@ -179,9 +179,9 @@ class Owner {
     this.fans,
   });
 
-  String? name;
-  String? face;
-  int? fans;
+  String name;
+  String face;
+  int fans;
 
   factory Owner.fromJson(Map<String, dynamic> json) => Owner(
     name: json["name"],

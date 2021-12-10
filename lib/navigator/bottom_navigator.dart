@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 
 /// 底部导航
 class BottomNavigator extends StatefulWidget {
-  const BottomNavigator({Key? key}) : super(key: key);
+  const BottomNavigator({Key key}) : super(key: key);
 
   @override
   _BottomNavigatorState createState() => _BottomNavigatorState();
@@ -21,7 +21,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
   static int initialPage = 0;
   final PageController _controller = PageController(initialPage: 0);
 
-  List<Widget>? _pages;
+  List<Widget> _pages;
 
   bool _hasBuild = false;
 
@@ -32,14 +32,14 @@ class _BottomNavigatorState extends State<BottomNavigator> {
     if (!_hasBuild) {
       /// 页面第一次打开时通知打开的是哪个tab
       HiNavigator.getInstance()
-          .onBottomTabChange(initialPage, _pages![initialPage]);
+          .onBottomTabChange(initialPage, _pages[initialPage]);
       _hasBuild = true;
     }
 
     return Scaffold(
       body: PageView(
         controller: _controller,
-        children: _pages!,
+        children: _pages,
         onPageChanged: (index) => _onJumpTo(index, pageChanged: true),
         physics: const NeverScrollableScrollPhysics(),
       ),
@@ -71,7 +71,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
       // 让PageView展示对应的tab
       _controller.jumpToPage(index);
     } else {
-      HiNavigator.getInstance().onBottomTabChange(index, _pages![index]);
+      HiNavigator.getInstance().onBottomTabChange(index, _pages[index]);
     }
     setState(() {
       // 控制选中第几个tab

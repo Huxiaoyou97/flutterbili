@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class LoginEffect extends StatefulWidget {
   final bool protect;
 
-  LoginEffect({required this.protect});
+  LoginEffect({this.protect});
 
   @override
   _LoginEffectState createState() => _LoginEffectState();
@@ -20,7 +20,7 @@ class _LoginEffectState extends State<LoginEffect> {
         color: Colors.grey[100],
         border: Border(
           bottom: BorderSide(
-            color: Colors.grey[300]!,
+            color: Colors.grey[300],
           ),
         ),
       ),

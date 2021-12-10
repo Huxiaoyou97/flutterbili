@@ -12,10 +12,10 @@ class LoginInput extends StatefulWidget {
   final String hint;
 
   /// 内容发生变化 change 事件
-  final ValueChanged<String>? onChanged;
+  final ValueChanged<String> onChanged;
 
   /// 输入框获取焦点事件
-  final ValueChanged<bool>? focusChanged;
+  final ValueChanged<bool> focusChanged;
 
   /// 输入框底部线条是否撑满一行
   final bool lineStretch;
@@ -24,9 +24,9 @@ class LoginInput extends StatefulWidget {
   final bool obscureText;
 
   /// 输入框类型 纯数字输入 普通输入 等
-  final TextInputType? keyboardType;
+  final TextInputType keyboardType;
 
-  final TextEditingController? editingController;
+  final TextEditingController editingController;
 
   LoginInput(this.title, this.hint,
       {this.onChanged,
@@ -53,7 +53,7 @@ class _LoginInputState extends State<LoginInput> {
       // hasFocus 获取到光标的时候会执行
       print("Has focus: ${_focusNode.hasFocus}");
       if (widget.focusChanged != null) {
-        widget.focusChanged!(_focusNode.hasFocus);
+        widget.focusChanged(_focusNode.hasFocus);
       }
     });
   }

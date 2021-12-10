@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:underline_indicator/underline_indicator.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({Key key}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -21,7 +21,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends HIState<HomePage>
     with AutomaticKeepAliveClientMixin, TickerProviderStateMixin {
   var listener;
-  TabController? _controller;
+  TabController _controller;
 
   List<CategoryModel> categoryList = [];
   List<BannerModel> bannerList = [];
@@ -85,7 +85,7 @@ class _HomePageState extends HIState<HomePage>
 
   _tabBar() {
     return TabBar(
-      controller: _controller!,
+      controller: _controller,
       isScrollable: true,
       //  tabBar是否可以滚动
       labelColor: Colors.black,
@@ -99,7 +99,7 @@ class _HomePageState extends HIState<HomePage>
           child: Padding(
             padding: const EdgeInsets.only(left: 5, right: 5),
             child: Text(
-              tab.name!,
+              tab.name,
               style: const TextStyle(fontSize: 16),
             ),
           ),
@@ -115,15 +115,15 @@ class _HomePageState extends HIState<HomePage>
       if (result.categoryList != null) {
         /// tab 长度变化后需要重新创建TabController
         _controller =
-            TabController(length: result.categoryList!.length, vsync: this);
+            TabController(length: result.categoryList.length, vsync: this);
         setState(() {
-          categoryList = result.categoryList!;
+          categoryList = result.categoryList;
         });
       }
 
       if (result.bannerList != null) {
         setState(() {
-          bannerList = result.bannerList!;
+          bannerList = result.bannerList;
         });
       }
     } on NeedAuth catch (e) {

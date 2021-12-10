@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class LoginButton extends StatelessWidget {
   final String title;
   final bool enable;
-  final VoidCallback? onPressed;
+  final VoidCallback onPressed;
 
   LoginButton(this.title, {this.enable = true, this.onPressed});
 

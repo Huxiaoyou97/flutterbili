@@ -1,7 +1,7 @@
-bool isNotEmpty(String? text) {
+bool isNotEmpty(String text) {
   return text?.isNotEmpty ?? false;
 }
 
-bool isEmpty(String? text) {
+bool isEmpty(String text) {
   return text?.isEmpty ?? true;
 }
