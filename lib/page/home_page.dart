@@ -1,3 +1,4 @@
+import 'package:bilibili/core/hi_state.dart';
 import 'package:bilibili/dao/home_dao.dart';
 import 'package:bilibili/http/core/hi_error.dart';
 import 'package:bilibili/model/home_model.dart';
@@ -17,7 +18,7 @@ class HomePage extends StatefulWidget {
 }
 
 /// with AutomaticKeepAliveClientMixin  页面来回切换不会被重新创建
-class _HomePageState extends State<HomePage>
+class _HomePageState extends HIState<HomePage>
     with AutomaticKeepAliveClientMixin, TickerProviderStateMixin {
   var listener;
   TabController? _controller;
@@ -71,15 +72,6 @@ class _HomePageState extends State<HomePage>
                   bannerList: tab.name == "推荐" ? bannerList : null,
                 );
               }).toList(),
-
-              // const Text("首页"),
-              // MaterialButton(
-              //   onPressed: () {
-              //     HiNavigator.getInstance().onJumpTo(RouteStatus.detail,
-              //         args: {"videoMo": VideoModel(1001)});
-              //   },
-              //   child: const Text("详情"),
-              // ),
             ),
           )
         ],
