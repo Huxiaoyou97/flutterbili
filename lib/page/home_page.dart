@@ -9,15 +9,15 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
   var listener;
 
   @override
   void initState() {
     super.initState();
     HiNavigator.getInstance().addListener(listener = (current, pre) {
-      print("current---:${current.page}");
-      print("current---:${pre?.page}");
+      print("homePage:current---:${current.page}");
+      print("homePage:pre---:${pre?.page}");
 
       if (widget == current.page || current.page is HomePage) {
         print("打开了首页, onResume");
@@ -55,4 +55,8 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

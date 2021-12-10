@@ -1,3 +1,4 @@
+import 'package:bilibili/navigator/hi_navigator.dart';
 import 'package:bilibili/page/favorite_page.dart';
 import 'package:bilibili/page/home_page.dart';
 import 'package:bilibili/page/profile_page.dart';
@@ -17,31 +18,34 @@ class _BottomNavigatorState extends State<BottomNavigator> {
   final _defaultColor = Colors.grey;
   final _activeColor = primary;
   int _currentIndex = 0;
+  static int initialPage = 0;
   final PageController _controller = PageController(initialPage: 0);
+
+  List<Widget>? _pages;
+
+  bool _hasBuild = false;
 
   @override
   Widget build(BuildContext context) {
+    _pages = [HomePage(), RankingPage(), FavoritePage(), ProfilePage()];
+
+    if (!_hasBuild) {
+      /// 页面第一次打开时通知打开的是哪个tab
+      HiNavigator.getInstance()
+          .onBottomTabChange(initialPage, _pages![initialPage]);
+      _hasBuild = true;
+    }
+
     return Scaffold(
       body: PageView(
         controller: _controller,
-        children: [HomePage(), RankingPage(), FavoritePage(), ProfilePage()],
-        onPageChanged: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
+        children: _pages!,
+        onPageChanged: (index) => _onJumpTo(index, pageChanged: true),
         physics: const NeverScrollableScrollPhysics(),
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
-        onTap: (index) {
-          // 让PageView展示对应的tab
-          _controller.jumpToPage(index);
-          setState(() {
-            // 控制选中第几个tab
-            _currentIndex = index;
-          });
-        },
+        onTap: (index) => _onJumpTo(index),
         type: BottomNavigationBarType.fixed,
         selectedItemColor: _activeColor,
         items: [
@@ -60,5 +64,18 @@ class _BottomNavigatorState extends State<BottomNavigator> {
       activeIcon: Icon(icon, color: _activeColor),
       label: title,
     );
+  }
+
+  void _onJumpTo(int index, {pageChanged = false}) {
+    if (!pageChanged) {
+      // 让PageView展示对应的tab
+      _controller.jumpToPage(index);
+    } else {
+      HiNavigator.getInstance().onBottomTabChange(index, _pages![index]);
+    }
+    setState(() {
+      // 控制选中第几个tab
+      _currentIndex = index;
+    });
   }
 }
