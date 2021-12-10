@@ -4,6 +4,9 @@ import 'package:bilibili/page/register_page.dart';
 import 'package:bilibili/page/video_detail_page.dart';
 import 'package:flutter/material.dart';
 
+typedef RouteChangeListener = Function(
+    RouteStatusInfo current, RouteStatusInfo pre);
+
 /// 创建页面
 pageWrap(Widget child) {
   return MaterialPage(key: ValueKey(child.hashCode), child: child);
@@ -54,6 +57,11 @@ class HiNavigator extends _RouteJumpListener {
 
   RouteJumpListener? _routeJump;
 
+  List<RouteChangeListener> _listeners = [];
+
+  /// 打开过的页面
+  RouteStatusInfo? _current;
+
   HiNavigator._();
 
   static HiNavigator getInstance() {
@@ -68,6 +76,19 @@ class HiNavigator extends _RouteJumpListener {
     _routeJump = routeJumpListener;
   }
 
+  /// 监听路由页面跳转
+  void addListener(RouteChangeListener listener) {
+    if (!_listeners.contains(listener)) {
+      _listeners.add(listener);
+    }
+  }
+
+  /// 移除监听
+  void removeListener(RouteChangeListener listener) {
+    _listeners.remove(listener);
+  }
+
+  /// 路由跳转
   @override
   void onJumpTo(RouteStatus routeStatus, {Map? args}) {
     if (args != null) {
@@ -75,6 +96,28 @@ class HiNavigator extends _RouteJumpListener {
     } else {
       _routeJump?.onJumpTo(routeStatus);
     }
+  }
+
+  /// 通知路由页面变化
+  void notify(List<MaterialPage> currentPages, List<MaterialPage> prePages) {
+    if (currentPages == prePages) return;
+    var current =
+    RouteStatusInfo(getStatus(currentPages.last), currentPages.last.child);
+
+    _notify(current);
+  }
+
+  void _notify(RouteStatusInfo current) {
+    print("hi_navigator:current: ${current.page}");
+    print("hi_navigator:pre: ${_current?.page}");
+    for (var listener in _listeners) {
+      if (_current != null) {
+        listener(current, _current!);
+      } else {
+        listener(current, current);
+      }
+    }
+    _current = current;
   }
 }
 
