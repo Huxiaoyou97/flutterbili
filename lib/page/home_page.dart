@@ -14,7 +14,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     HiNavigator.getInstance().addListener(listener = (current, pre) {
       print("current---:${current.page}");
@@ -30,6 +29,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void dispose() {
+    /// 页面被关闭时移除监听
     HiNavigator.getInstance().removeListener(listener);
 
     super.dispose();

@@ -17,6 +17,8 @@ import 'package:bilibili/util/color.dart';
 import 'package:bilibili/util/toast.dart';
 import 'package:flutter/material.dart';
 
+import 'navigator/bottom_navigator.dart';
+
 void main() {
   runApp(const BiliApp());
 }
@@ -99,7 +101,7 @@ class BiliRouteDelegate extends RouterDelegate<BiliRoutePath>
     if (routeStatus == RouteStatus.home) {
       /// 跳转到首页时将栈中其它的页面出栈，因为首先不可回退
       pages.clear();
-      page = pageWrap(HomePage());
+      page = pageWrap(BottomNavigator());
     } else if (routeStatus == RouteStatus.detail) {
       page = pageWrap(VideoDetailPage(videoModel!));
     } else if (routeStatus == RouteStatus.register) {
