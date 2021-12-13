@@ -6,6 +6,7 @@ import 'package:bilibili/navigator/hi_navigator.dart';
 import 'package:bilibili/page/home_tab_page.dart';
 import 'package:bilibili/util/color.dart';
 import 'package:bilibili/util/toast.dart';
+import 'package:bilibili/widget/loading_container.dart';
 import 'package:bilibili/widget/navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:underline_indicator/underline_indicator.dart';
@@ -27,6 +28,8 @@ class _HomePageState extends HIState<HomePage>
 
   List<CategoryModel> categoryList = [];
   List<BannerModel> bannerList = [];
+
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -58,30 +61,34 @@ class _HomePageState extends HIState<HomePage>
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      body: Column(
-        children: <Widget>[
-          NavigationBar(
-            height: 50,
-            child: _appBar(),
-            color: Colors.white,
-            statusStyle: StatusStyle.DARK_CONTENT,
-          ),
-          Container(
-            color: Colors.white,
-            child: _tabBar(),
-          ),
-          Flexible(
-            child: TabBarView(
-              controller: _controller,
-              children: categoryList.map((tab) {
-                return HomeTabPage(
-                  categoryName: tab.name,
-                  bannerList: tab.name == "推荐" ? bannerList : null,
-                );
-              }).toList(),
+      body: LoadingContainer(
+        cover: true,
+        isLoading: _isLoading,
+        child: Column(
+          children: <Widget>[
+            NavigationBar(
+              height: 50,
+              child: _appBar(),
+              color: Colors.white,
+              statusStyle: StatusStyle.DARK_CONTENT,
             ),
-          )
-        ],
+            Container(
+              color: Colors.white,
+              child: _tabBar(),
+            ),
+            Flexible(
+              child: TabBarView(
+                controller: _controller,
+                children: categoryList.map((tab) {
+                  return HomeTabPage(
+                    categoryName: tab.name,
+                    bannerList: tab.name == "推荐" ? bannerList : null,
+                  );
+                }).toList(),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -133,12 +140,22 @@ class _HomePageState extends HIState<HomePage>
           bannerList = result.bannerList;
         });
       }
+
+      setState(() {
+        _isLoading = false;
+      });
     } on NeedAuth catch (e) {
       print(e);
       showWarnToast(e.message);
+      setState(() {
+        _isLoading = false;
+      });
     } on HiNetError catch (e) {
       print(e);
       showWarnToast(e.message);
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
