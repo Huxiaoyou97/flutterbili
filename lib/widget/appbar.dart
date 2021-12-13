@@ -1,3 +1,4 @@
+import 'package:bilibili/util/view_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -28,5 +29,40 @@ appBar(String title, String rightTitle, VoidCallback rightButtonClick) {
         ),
       )
     ],
+  );
+}
+
+// 视频详情页appBar
+videoAppBar() {
+  return Container(
+    padding: EdgeInsets.only(right: 8),
+    decoration: BoxDecoration(
+      gradient: blackLinearGradient(fromTop: true),
+    ),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const BackButton(
+          color: Colors.white,
+        ),
+        Row(
+          children: const [
+            Icon(
+              Icons.live_tv_rounded,
+              color: Colors.white,
+              size: 20,
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 12),
+              child: Icon(
+                Icons.more_vert_rounded,
+                color: Colors.white,
+                size: 20,
+              ),
+            )
+          ],
+        )
+      ],
+    ),
   );
 }

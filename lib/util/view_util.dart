@@ -1,3 +1,4 @@
+import 'package:bilibili/widget/navigation_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
@@ -34,4 +35,10 @@ blackLinearGradient({bool fromTop = false}) {
       Colors.transparent,
     ],
   );
+}
+
+/// 修改状态栏
+void changeStatusBar(
+    {color: Colors.white, StatusStyle statusStyle: StatusStyle.DARK_CONTENT}) {
+  // TODO 待实现
 }
