@@ -1,15 +1,6 @@
-import 'dart:convert';
-
 import 'package:bilibili/dao/login_dao.dart';
 import 'package:bilibili/db/hi_cache.dart';
-import 'package:bilibili/http/core/hi_error.dart';
-import 'package:bilibili/http/core/hi_net.dart';
-import 'package:bilibili/http/request/notic_request.dart';
-import 'package:bilibili/http/request/test_request.dart';
-import 'package:bilibili/model/owner.dart';
-import 'package:bilibili/model/video_model.dart';
 import 'package:bilibili/navigator/hi_navigator.dart';
-import 'package:bilibili/page/home_page.dart';
 import 'package:bilibili/page/login_page.dart';
 import 'package:bilibili/page/register_page.dart';
 import 'package:bilibili/page/video_detail_page.dart';
@@ -17,6 +8,7 @@ import 'package:bilibili/util/color.dart';
 import 'package:bilibili/util/toast.dart';
 import 'package:flutter/material.dart';
 
+import 'model/home_model.dart';
 import 'navigator/bottom_navigator.dart';
 
 void main() {

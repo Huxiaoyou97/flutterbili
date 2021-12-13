@@ -2,16 +2,18 @@ import 'package:bilibili/core/hi_state.dart';
 import 'package:bilibili/dao/home_dao.dart';
 import 'package:bilibili/http/core/hi_error.dart';
 import 'package:bilibili/model/home_model.dart';
-import 'package:bilibili/model/video_model.dart';
 import 'package:bilibili/navigator/hi_navigator.dart';
 import 'package:bilibili/page/home_tab_page.dart';
 import 'package:bilibili/util/color.dart';
 import 'package:bilibili/util/toast.dart';
+import 'package:bilibili/widget/navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:underline_indicator/underline_indicator.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key key}) : super(key: key);
+  final ValueChanged<int> onJumpTo;
+
+  const HomePage({Key key, this.onJumpTo}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -58,9 +60,15 @@ class _HomePageState extends HIState<HomePage>
     return Scaffold(
       body: Column(
         children: <Widget>[
+          NavigationBar(
+            height: 50,
+            child: _appBar(),
+            color: Colors.white,
+            statusStyle: StatusStyle.DARK_CONTENT,
+          ),
           Container(
             color: Colors.white,
-            padding: const EdgeInsets.only(top: 30),
+            // padding: const EdgeInsets.only(top: 30),
             child: _tabBar(),
           ),
           Flexible(
@@ -68,7 +76,7 @@ class _HomePageState extends HIState<HomePage>
               controller: _controller,
               children: categoryList.map((tab) {
                 return HomeTabPage(
-                  name: tab.name,
+                  categoryName: tab.name,
                   bannerList: tab.name == "推荐" ? bannerList : null,
                 );
               }).toList(),
@@ -133,5 +141,63 @@ class _HomePageState extends HIState<HomePage>
       print(e);
       showWarnToast(e.message);
     }
+  }
+
+  Widget _appBar() {
+    return Padding(
+      padding: EdgeInsets.only(left: 15, right: 15),
+      child: Row(
+        children: [
+          InkWell(
+            onTap: () {
+              if (widget.onJumpTo != null) {
+                widget.onJumpTo(3);
+              }
+            },
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(23),
+              child: const Image(
+                height: 46,
+                width: 46,
+                image: AssetImage("images/avatar.png"),
+              ),
+            ),
+          ),
+
+          /// 输入框 在Row中填充剩余的空间
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 15, right: 15),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: Container(
+                  padding: EdgeInsets.only(left: 10),
+                  height: 32,
+                  alignment: Alignment.centerLeft,
+                  child: const Icon(
+                    Icons.search,
+                    color: Colors.grey,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[100],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const Icon(
+            Icons.explore_outlined,
+            color: Colors.grey,
+          ),
+          const Padding(
+            padding: EdgeInsets.only(left: 12),
+            child: Icon(
+              Icons.mail_outlined,
+              color: Colors.grey,
+            ),
+          )
+        ],
+      ),
+    );
   }
 }

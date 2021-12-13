@@ -11,11 +11,27 @@ class HomeModel {
   List<CategoryModel> categoryList;
   List<VideoModel> videoList;
 
-  factory HomeModel.fromJson(Map<String, dynamic> json) => HomeModel(
-    bannerList: List<BannerModel>.from(json["bannerList"].map((x) => BannerModel.fromJson(x))),
-    categoryList: List<CategoryModel>.from(json["categoryList"].map((x) => CategoryModel.fromJson(x))),
-    videoList: List<VideoModel>.from(json["videoList"].map((x) => VideoModel.fromJson(x))),
-  );
+  HomeModel.fromJson(Map<String, dynamic> json) {
+    if (json['bannerList'] != null) {
+      bannerList = List<BannerModel>.empty(growable: true);
+      json['bannerList'].forEach((v) {
+        bannerList.add(BannerModel.fromJson(v));
+      });
+    }
+    if (json['categoryList'] != null) {
+      categoryList = List<CategoryModel>.empty(growable: true);
+      json['categoryList'].forEach((v) {
+        categoryList.add(CategoryModel.fromJson(v));
+      });
+    }
+    if (json['videoList'] != null) {
+      videoList = List<VideoModel>.empty(growable: true);
+      json['videoList'].forEach((v) {
+        videoList.add(VideoModel.fromJson(v));
+      });
+    }
+  }
+
 
   Map<String, dynamic> toJson() => {
     "bannerList": List<dynamic>.from(bannerList.map((x) => x.toJson())),
