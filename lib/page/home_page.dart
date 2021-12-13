@@ -9,6 +9,7 @@ import 'package:bilibili/page/video_detail_page.dart';
 import 'package:bilibili/util/color.dart';
 import 'package:bilibili/util/toast.dart';
 import 'package:bilibili/util/view_util.dart';
+import 'package:bilibili/widget/hi_tab.dart';
 import 'package:bilibili/widget/loading_container.dart';
 import 'package:bilibili/widget/navigation_bar.dart';
 import 'package:flutter/material.dart';
@@ -144,27 +145,20 @@ class _HomePageState extends HIState<HomePage>
   bool get wantKeepAlive => true;
 
   _tabBar() {
-    return TabBar(
-      controller: _controller,
-      isScrollable: true,
-      //  tabBar是否可以滚动
-      labelColor: Colors.black,
-      indicator: const UnderlineIndicator(
-        strokeCap: StrokeCap.round,
-        borderSide: BorderSide(color: primary, width: 3),
-        insets: EdgeInsets.only(left: 15, right: 15),
-      ),
-      tabs: categoryList.map((tab) {
+    return HiTab(
+      categoryList.map((tab) {
         return Tab(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 5, right: 5),
-            child: Text(
-              tab.name,
-              style: const TextStyle(fontSize: 16),
-            ),
+          child: Text(
+            tab.name,
           ),
         );
       }).toList(),
+
+      controller: _controller,
+      fontSize: 16,
+      borderWidth: 3,
+      unselectedLabelColor: Colors.black54,
+      insets: 13,
     );
   }
 
