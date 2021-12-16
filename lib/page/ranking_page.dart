@@ -1,3 +1,4 @@
+import 'package:bilibili/dao/ranking_dao.dart';
 import 'package:bilibili/util/view_util.dart';
 import 'package:bilibili/widget/hi_tab.dart';
 import 'package:bilibili/widget/navigation_bar.dart';
@@ -25,6 +26,7 @@ class _RankingPageState extends State<RankingPage>
   void initState() {
     super.initState();
     _controller = TabController(length: TABS.length, vsync: this);
+    RankingDao.get("like");
   }
 
   @override
