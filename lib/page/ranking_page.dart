@@ -1,4 +1,5 @@
 import 'package:bilibili/dao/ranking_dao.dart';
+import 'package:bilibili/page/ranking_tab_page.dart';
 import 'package:bilibili/util/view_util.dart';
 import 'package:bilibili/widget/hi_tab.dart';
 import 'package:bilibili/widget/navigation_bar.dart';
@@ -72,11 +73,12 @@ class _RankingPageState extends State<RankingPage>
   }
 
   _buildTabView() {
-    return Flexible(child: TabBarView(
+    return Flexible(
+        child: TabBarView(
       controller: _controller,
       children: TABS.map((tab) {
-        return Container(
-          child: Text(tab["name"]),
+        return RankingTabPage(
+          sort: tab["key"],
         );
       }).toList(),
     ));

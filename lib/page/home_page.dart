@@ -1,19 +1,18 @@
 import 'package:bilibili/core/hi_state.dart';
 import 'package:bilibili/dao/home_dao.dart';
 import 'package:bilibili/http/core/hi_error.dart';
+import 'package:bilibili/model/banner_model.dart';
 import 'package:bilibili/model/home_model.dart';
 import 'package:bilibili/navigator/hi_navigator.dart';
 import 'package:bilibili/page/home_tab_page.dart';
 import 'package:bilibili/page/profile_page.dart';
 import 'package:bilibili/page/video_detail_page.dart';
-import 'package:bilibili/util/color.dart';
 import 'package:bilibili/util/toast.dart';
 import 'package:bilibili/util/view_util.dart';
 import 'package:bilibili/widget/hi_tab.dart';
 import 'package:bilibili/widget/loading_container.dart';
 import 'package:bilibili/widget/navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:underline_indicator/underline_indicator.dart';
 
 class HomePage extends StatefulWidget {
   final ValueChanged<int> onJumpTo;
@@ -154,7 +153,6 @@ class _HomePageState extends HIState<HomePage>
           ),
         );
       }).toList(),
-
       controller: _controller,
       fontSize: 16,
       borderWidth: 3,
@@ -246,11 +244,16 @@ class _HomePageState extends HIState<HomePage>
             Icons.explore_outlined,
             color: Colors.grey,
           ),
-          const Padding(
-            padding: EdgeInsets.only(left: 12),
-            child: Icon(
-              Icons.mail_outlined,
-              color: Colors.grey,
+          InkWell(
+            onTap: () {
+              HiNavigator.getInstance().onJumpTo(RouteStatus.notice);
+            },
+            child: const Padding(
+              padding: EdgeInsets.only(left: 12),
+              child: Icon(
+                Icons.mail_outlined,
+                color: Colors.grey,
+              ),
             ),
           )
         ],

@@ -1,4 +1,6 @@
 // 数字转万
+import 'package:intl/intl.dart';
+
 String countFormat(int count) {
   String views = "";
 
@@ -21,4 +23,13 @@ String durationTransform(int seconds) {
   } else {
     return "$m:$s";
   }
+}
+
+///日期格式化，2022-06-11 20:06:43 -> 06-11
+String dateMonthAndDay(String dateStr) {
+  print("dateStr:$dateStr");
+  DateTime now = DateTime.now();
+  DateFormat formatter = DateFormat('MM-dd');
+  String formatted = formatter.format(now);
+  return formatted;
 }

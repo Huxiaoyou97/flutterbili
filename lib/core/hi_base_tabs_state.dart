@@ -1,9 +1,9 @@
-
 // 列表常驻缓存 AutomaticKeepAliveClientMixin
 import 'package:bilibili/core/hi_state.dart';
 import 'package:bilibili/http/core/hi_error.dart';
 import 'package:bilibili/util/color.dart';
 import 'package:bilibili/util/toast.dart';
+import 'package:bilibili/widget/loading_container.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -21,6 +21,10 @@ abstract class HiBaseTabState<M, L, T extends StatefulWidget> extends HIState<T>
 
   get contentChild;
 
+  bool _isLoading = true;
+
+  bool flag = true; //默认可以请求
+
   @override
   void initState() {
     // TODO: implement initState
@@ -30,7 +34,10 @@ abstract class HiBaseTabState<M, L, T extends StatefulWidget> extends HIState<T>
           scrollController.position.pixels;
       // print("dis:$dis");
       // 当距离底部不足300时 加载更多
-      if (dis < 300 && !loading) {
+      if (dis < 300 &&
+          !loading &&
+          // fix 当列表高度不满屏幕高度时不执行加载更多
+          scrollController.position.maxScrollExtent != 0) {
         loadData(loadMore: true);
       }
     });
@@ -82,10 +89,10 @@ abstract class HiBaseTabState<M, L, T extends StatefulWidget> extends HIState<T>
       setState(() {
         if (loadMore) {
           // 合成新数组
-            dataList = [...dataList, ...parseList(result)];
-            if (parseList(result).isNotEmpty) {
-              pageIndex++;
-            }
+          dataList = [...dataList, ...parseList(result)];
+          if (parseList(result).isNotEmpty) {
+            pageIndex++;
+          }
         } else {
           dataList = parseList(result);
         }

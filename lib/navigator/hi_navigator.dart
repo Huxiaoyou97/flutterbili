@@ -1,9 +1,11 @@
 import 'package:bilibili/navigator/bottom_navigator.dart';
 import 'package:bilibili/page/home_page.dart';
 import 'package:bilibili/page/login_page.dart';
+import 'package:bilibili/page/notice_page.dart';
 import 'package:bilibili/page/register_page.dart';
 import 'package:bilibili/page/video_detail_page.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 typedef RouteChangeListener = Function(
     RouteStatusInfo current, RouteStatusInfo pre);
@@ -14,7 +16,7 @@ pageWrap(Widget child) {
 }
 
 /// 自定义路由封装，路由状态
-enum RouteStatus { login, register, home, detail, unknown }
+enum RouteStatus { login, register, home, detail, unknown, notice }
 
 /// 获取routeStatus在页面栈中的位置
 int getPageIndex(List<MaterialPage> pages, RouteStatus routeStatus) {
@@ -35,6 +37,8 @@ RouteStatus getStatus(MaterialPage page) {
     return RouteStatus.register;
   } else if (page.child is BottomNavigator) {
     return RouteStatus.home;
+  } else if (page.child is NoticePage) {
+    return RouteStatus.notice;
   } else if (page.child is VideoDetailPage) {
     return RouteStatus.detail;
   } else {
@@ -73,6 +77,15 @@ class HiNavigator extends _RouteJumpListener {
       _instance = HiNavigator._();
     }
     return _instance;
+  }
+
+  Future<bool> openH5(String url) async {
+    var result = await canLaunch(url);
+    if (result) {
+      return await launch(url);
+    } else {
+      return Future.value(false);
+    }
   }
 
   /// 首页底部tab切换监听

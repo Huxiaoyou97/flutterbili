@@ -2,6 +2,7 @@ import 'package:bilibili/dao/login_dao.dart';
 import 'package:bilibili/db/hi_cache.dart';
 import 'package:bilibili/navigator/hi_navigator.dart';
 import 'package:bilibili/page/login_page.dart';
+import 'package:bilibili/page/notice_page.dart';
 import 'package:bilibili/page/register_page.dart';
 import 'package:bilibili/page/video_detail_page.dart';
 import 'package:bilibili/util/color.dart';
@@ -99,6 +100,8 @@ class BiliRouteDelegate extends RouterDelegate<BiliRoutePath>
       page = pageWrap(VideoDetailPage(videoModel));
     } else if (routeStatus == RouteStatus.register) {
       page = pageWrap(RegisterPage());
+    } else if (routeStatus == RouteStatus.notice) {
+      page = pageWrap(NoticePage());
     } else if (routeStatus == RouteStatus.login) {
       page = pageWrap(LoginPage());
     }
@@ -145,11 +148,12 @@ class BiliRouteDelegate extends RouterDelegate<BiliRoutePath>
   RouteStatus get routeStatus {
     if (_routeStatus != RouteStatus.register && !hasLogin) {
       return _routeStatus = RouteStatus.login;
-    } else if (videoModel != null) {
-      return _routeStatus = RouteStatus.detail;
     } else {
       return _routeStatus;
     }
+    // else if (videoModel != null) {
+    // return _routeStatus = RouteStatus.detail;
+    // }
   }
 
   /// 用户是否登录

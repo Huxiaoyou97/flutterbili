@@ -1,4 +1,4 @@
-import 'package:bilibili/model/home_model.dart';
+import 'package:bilibili/model/banner_model.dart';
 import 'package:bilibili/model/video_model.dart';
 import 'package:bilibili/navigator/hi_navigator.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +44,8 @@ class HiBanner extends StatelessWidget {
     return InkWell(
       onTap: () {
         print(bannerModel?.title);
-        _handleClick(bannerModel);
+        // _handleClick(bannerModel);
+        handleBannerClick(bannerModel);
       },
       child: Container(
         padding: padding,
@@ -59,16 +60,26 @@ class HiBanner extends StatelessWidget {
     );
   }
 
-  void _handleClick(BannerModel bannerModel) {
-    if (bannerModel.type == "video") {
-      HiNavigator.getInstance().onJumpTo(RouteStatus.detail, args: {
-        "videoMo": VideoModel(
-          vid: bannerModel.url,
-        )
-      });
-    } else {
-      print("banner-type:${bannerModel.type}, url: ${bannerModel.url}");
-      //TODO
-    }
+  // void _handleClick(BannerModel bannerModel) {
+  //   if (bannerModel.type == "video") {
+  //     HiNavigator.getInstance().onJumpTo(RouteStatus.detail, args: {
+  //       "videoMo": VideoModel(
+  //         vid: bannerModel.url,
+  //       )
+  //     });
+  //   } else {
+  //     print("banner-type:${bannerModel.type}, url: ${bannerModel.url}");
+  //     //TODO
+  //   }
+  // }
+}
+
+///banner点击跳转
+void handleBannerClick(BannerModel bannerMo) {
+  if (bannerMo.type == 'video') {
+    HiNavigator.getInstance().onJumpTo(RouteStatus.detail,
+        args: {"videoMo": VideoModel(vid: bannerMo.url)});
+  } else {
+    HiNavigator.getInstance().openH5(bannerMo.url);
   }
 }

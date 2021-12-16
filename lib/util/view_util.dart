@@ -93,3 +93,25 @@ BoxDecoration bottomBoxShadow() {
     )
   ]);
 }
+
+//返回一个圈
+Widget getMoreWidget() {
+  return Center(
+    child: Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: const [
+          Text(
+            '加载中...',
+            style: TextStyle(fontSize: 16.0),
+          ),
+          CircularProgressIndicator(
+            strokeWidth: 1.0,
+          )
+        ],
+      ),
+    ),
+  );
+}

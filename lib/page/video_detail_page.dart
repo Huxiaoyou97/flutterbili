@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:bilibili/dao/favorite_dao.dart';
+import 'package:bilibili/dao/favorites_dao.dart';
 import 'package:bilibili/dao/like_dao.dart';
 import 'package:bilibili/dao/video_detail_dao.dart';
 import 'package:bilibili/http/core/hi_error.dart';

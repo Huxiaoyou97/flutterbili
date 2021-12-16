@@ -1,7 +1,7 @@
 import 'package:bilibili/model/video_model.dart';
 
-class RankingModel {
-  RankingModel({
+class FavoriteModel {
+  FavoriteModel({
     this.total,
     this.list,
   });
@@ -9,7 +9,7 @@ class RankingModel {
   int total;
   List<VideoModel> list;
 
-  factory RankingModel.fromJson(Map<String, dynamic> json) => RankingModel(
+  factory FavoriteModel.fromJson(Map<String, dynamic> json) => FavoriteModel(
     total: json["total"],
     list: List<VideoModel>.from(json["list"].map((x) => VideoModel.fromJson(x))),
   );
