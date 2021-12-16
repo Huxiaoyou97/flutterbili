@@ -126,7 +126,7 @@ class VideoLargeCard extends StatelessWidget {
           ),
         ),
         hiSpace(width: 8),
-        Text(owner.name, style: TextStyle(fontSize: 11, color: Colors.grey))
+        Text(owner.name, style: const TextStyle(fontSize: 11, color: Colors.grey))
       ],
     );
   }

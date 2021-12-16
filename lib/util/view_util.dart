@@ -81,3 +81,15 @@ SizedBox hiSpace({double height = 1, double width = 1}) {
     width: width,
   );
 }
+
+// 底部阴影
+BoxDecoration bottomBoxShadow() {
+  return BoxDecoration(color: Colors.white, boxShadow: [
+    BoxShadow(
+      color: Colors.grey[100],
+      offset: const Offset(0, 5), // x,y轴偏移
+      blurRadius: 5, // 阴影模糊程度
+      spreadRadius: 1, // 阴影扩散程度
+    )
+  ]);
+}
