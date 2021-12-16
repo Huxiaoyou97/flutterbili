@@ -9,6 +9,7 @@ import 'package:bilibili/util/toast.dart';
 import 'package:flutter/material.dart';
 
 import 'model/home_model.dart';
+import 'model/video_model.dart';
 import 'navigator/bottom_navigator.dart';
 
 void main() {

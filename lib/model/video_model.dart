@@ -1,5 +1,5 @@
-class TestMo {
-  TestMo({
+class VideoModel {
+  VideoModel({
     this.id,
     this.vid,
     this.title,
@@ -36,10 +36,10 @@ class TestMo {
   int like;
   int coin;
   int share;
-  DateTime createTime;
+  String createTime;
   int size;
 
-  factory TestMo.fromJson(Map<String, dynamic> json) => TestMo(
+  factory VideoModel.fromJson(Map<String, dynamic> json) => VideoModel(
         id: json["id"],
         vid: json["vid"],
         title: json["title"],
@@ -56,7 +56,7 @@ class TestMo {
         like: json["like"],
         coin: json["coin"],
         share: json["share"],
-        createTime: DateTime.parse(json["createTime"]),
+        createTime: json["createTime"],
         size: json["size"],
       );
 
@@ -71,13 +71,13 @@ class TestMo {
         "desc": desc,
         "view": view,
         "duration": duration,
-        "owner": owner?.toJson(),
+        "owner": owner.toJson(),
         "reply": reply,
         "favorite": favorite,
         "like": like,
         "coin": coin,
         "share": share,
-        "createTime": createTime?.toIso8601String(),
+        "createTime": createTime,
         "size": size,
       };
 }

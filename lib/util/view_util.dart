@@ -1,3 +1,4 @@
+import 'package:bilibili/util/format_util.dart';
 import 'package:bilibili/widget/navigation_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -41,4 +42,42 @@ blackLinearGradient({bool fromTop = false}) {
 void changeStatusBar(
     {color: Colors.white, StatusStyle statusStyle: StatusStyle.DARK_CONTENT}) {
   // TODO 待实现
+}
+
+/// 带文字的小图标
+smallIconText(IconData iconData, var text) {
+  var style = const TextStyle(fontSize: 12, color: Colors.grey);
+
+  if (text is int) {
+    text = countFormat(text);
+  }
+
+  return [
+    Icon(
+      iconData,
+      color: Colors.grey,
+      size: 12,
+    ),
+    Text(
+      " $text",
+      style: style,
+    )
+  ];
+}
+
+/// border 线条
+borderLine(BuildContext context, {bottom = true, top = false}) {
+  BorderSide borderSide = BorderSide(width: 0.5, color: Colors.grey[200]);
+  return Border(
+    bottom: bottom ? borderSide : BorderSide.none,
+    top: top ? borderSide : BorderSide.none,
+  );
+}
+
+// 间距
+SizedBox hiSpace({double height = 1, double width = 1}) {
+  return SizedBox(
+    height: height,
+    width: width,
+  );
 }
