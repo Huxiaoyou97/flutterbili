@@ -1,3 +1,4 @@
+import 'package:bilibili/core/hi_base_tabs_state.dart';
 import 'package:bilibili/dao/home_dao.dart';
 import 'package:bilibili/http/core/hi_error.dart';
 import 'package:bilibili/model/home_model.dart';
@@ -20,72 +21,13 @@ class HomeTabPage extends StatefulWidget {
 }
 
 // 列表常驻缓存 AutomaticKeepAliveClientMixin
-class _HomeTabPageState extends State<HomeTabPage>
-    with AutomaticKeepAliveClientMixin {
-  List<VideoModel> videoList = [];
-
-  final ScrollController _scrollController = ScrollController();
-
-  int pageIndex = 1;
-
-  bool _loading = false;
-
+class _HomeTabPageState
+    extends HiBaseTabState<HomeModel, VideoModel, HomeTabPage> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    _scrollController.addListener(() {
-      var dis = _scrollController.position.maxScrollExtent -
-          _scrollController.position.pixels;
-      print("dis:$dis");
-      // 当距离底部不足300时 加载更多
-      if (dis < 300 && !_loading) {
-        _loadData(loadMore: true);
-      }
-    });
-    _loadData();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _scrollController.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    super.build(context); // 使用mixin 请调用super 否则会有警告出现
-    return RefreshIndicator(
-      child: MediaQuery.removePadding(
-        removeTop: true,
-        context: context,
-        child: StaggeredGridView.countBuilder(
-          controller: _scrollController,
-          physics: const AlwaysScrollableScrollPhysics(),
-          padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
-          crossAxisCount: 2,
-          itemCount: videoList.length + 1,
-          itemBuilder: (BuildContext context, int index) {
-            if (index == 0) {
-              return widget.bannerList != null ? _banner() : Container();
-            } else {
-              return VideoCard(
-                videoModel: videoList[index - 1],
-              );
-            }
-          },
-          staggeredTileBuilder: (int index) {
-            if (widget.bannerList != null && index == 0) {
-              return const StaggeredTile.fit(2);
-            } else {
-              return const StaggeredTile.fit(1);
-            }
-          },
-        ),
-      ),
-      onRefresh: _loadData,
-      color: primary,
-    );
+    print(widget.categoryName);
+    print(widget.bannerList);
   }
 
   _banner() {
@@ -95,43 +37,43 @@ class _HomeTabPageState extends State<HomeTabPage>
     );
   }
 
-  Future _loadData({loadMore = false}) async {
-    _loading = true;
-    if (!loadMore) {
-      pageIndex = 1;
-    }
+  @override
+  bool get wantKeepAlive => true;
 
-    var currentIndex = pageIndex + (loadMore ? 1 : 0);
-    print("currentIndex---$currentIndex");
-    try {
-      HomeModel result = await HomeDao.get(widget.categoryName,
-          pageIndex: currentIndex, pageSize: 10);
-
-      setState(() {
-        if (loadMore) {
-          if (result.videoList.isNotEmpty) {
-            videoList = [...videoList, ...result.videoList];
-            pageIndex++;
+  @override
+  get contentChild => StaggeredGridView.countBuilder(
+        controller: scrollController,
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
+        crossAxisCount: 2,
+        itemCount: dataList.length + 1,
+        itemBuilder: (BuildContext context, int index) {
+          if (index == 0) {
+            return widget.bannerList != null ? _banner() : Container();
+          } else {
+            return VideoCard(
+              videoModel: dataList[index - 1],
+            );
           }
-        } else {
-          videoList = result.videoList;
-        }
-      });
+        },
+        staggeredTileBuilder: (int index) {
+          if (widget.bannerList != null && index == 0) {
+            return const StaggeredTile.fit(2);
+          } else {
+            return const StaggeredTile.fit(1);
+          }
+        },
+      );
 
-      Future.delayed(const Duration(milliseconds: 1000), () {
-        _loading = false;
-      });
-    } on NeedAuth catch (e) {
-      _loading = false;
-      print(e);
-      showWarnToast(e.message);
-    } on HiNetError catch (e) {
-      _loading = false;
-      print(e);
-      showWarnToast(e.message);
-    }
+  @override
+  Future<HomeModel> getData(int pageIndex) async {
+    HomeModel result = await HomeDao.get(widget.categoryName,
+        pageIndex: pageIndex, pageSize: 10);
+    return result;
   }
 
   @override
-  bool get wantKeepAlive => true;
+  List<VideoModel> parseList(HomeModel result) {
+    return result.videoList;
+  }
 }
