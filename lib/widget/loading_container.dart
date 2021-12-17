@@ -27,7 +27,7 @@ class LoadingContainer extends StatelessWidget {
 
   Widget get _loadingView {
     return Center(
-      child: Lottie.asset("assets/vinyl-loading.json"),
+      child: Lottie.asset("assets/loading-dots.json"),
     );
   }
 }
