@@ -8,7 +8,6 @@ class ProfileDao {
     ProfileRequest request = ProfileRequest();
 
     var result = await HiNet.getInstance().fire(request);
-    print(result);
     return ProfileModel.fromJson(result['data']);
   }
 }
