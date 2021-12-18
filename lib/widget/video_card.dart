@@ -1,10 +1,11 @@
 import 'package:bilibili/model/home_model.dart';
 import 'package:bilibili/model/video_model.dart';
 import 'package:bilibili/navigator/hi_navigator.dart';
+import 'package:bilibili/provider/theme_provider.dart';
 import 'package:bilibili/util/format_util.dart';
 import 'package:bilibili/util/view_util.dart';
 import 'package:flutter/material.dart';
-import 'package:transparent_image/transparent_image.dart';
+import 'package:provider/provider.dart';
 
 class VideoCard extends StatelessWidget {
   final VideoModel videoModel;
@@ -13,6 +14,9 @@ class VideoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var themeProvider = context.watch<ThemeProvider>();
+    Color textColor = themeProvider.isDark() ? Colors.white70 : Colors.black87;
+
     return InkWell(
       onTap: () {
         print(videoModel.url);
@@ -31,7 +35,7 @@ class VideoCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _itemImages(context),
-                _infoText(),
+                _infoText(textColor),
               ],
             ),
           ),
@@ -113,7 +117,7 @@ class VideoCard extends StatelessWidget {
     );
   }
 
-  _infoText() {
+  _infoText(Color textColor) {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.only(top: 5, left: 8, bottom: 5, right: 8),
@@ -125,16 +129,16 @@ class VideoCard extends StatelessWidget {
               videoModel.title,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(fontSize: 12, color: Colors.black87),
+              style: TextStyle(fontSize: 12, color: textColor),
             ),
-            _owner()
+            _owner(textColor)
           ],
         ),
       ),
     );
   }
 
-  _owner() {
+  _owner(Color textColor) {
     var owner = videoModel.owner;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -149,7 +153,7 @@ class VideoCard extends StatelessWidget {
               padding: const EdgeInsets.only(left: 8),
               child: Text(
                 owner.name,
-                style: const TextStyle(fontSize: 11, color: Colors.black87),
+                style: TextStyle(fontSize: 11, color: textColor),
               ),
             )
           ],

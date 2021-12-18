@@ -85,7 +85,7 @@ class _FavoritePageState
           "收藏",
           style: TextStyle(fontSize: 16),
         ),
-        decoration: bottomBoxShadow(),
+        decoration: bottomBoxShadow(context),
       ),
     );
   }

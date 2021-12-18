@@ -11,6 +11,7 @@ import 'package:bilibili/http/core/hi_error.dart';
 import 'package:bilibili/model/home_model.dart';
 import 'package:bilibili/model/video_detail_model.dart';
 import 'package:bilibili/model/video_model.dart';
+import 'package:bilibili/provider/theme_provider.dart';
 import 'package:bilibili/util/toast.dart';
 import 'package:bilibili/util/view_util.dart';
 import 'package:bilibili/widget/appbar.dart';
@@ -23,6 +24,7 @@ import 'package:bilibili/widget/video_toolbar.dart';
 import 'package:bilibili/widget/video_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_overlay/flutter_overlay.dart';
+import 'package:provider/provider.dart';
 
 class VideoDetailPage extends StatefulWidget {
   final VideoModel videoModel;
@@ -84,7 +86,7 @@ class _VideoDetailPageState extends State<VideoDetailPage>
                   height: Platform.isAndroid ? 0 : 46,
                 ),
                 _buildVideoView(),
-                _buildTabNavigation(),
+                _buildTabNavigation(context),
                 // 填充剩余区域
                 Flexible(
                   child: TabBarView(
@@ -118,16 +120,20 @@ class _VideoDetailPageState extends State<VideoDetailPage>
     );
   }
 
-  _buildTabNavigation() {
+  _buildTabNavigation(BuildContext context) {
+    var themeProvider = context.watch<ThemeProvider>();
+
     // 使用 Material 实现阴影效果
     return Material(
       elevation: 5, // 阴影大小
-      shadowColor: Colors.grey[100], // 阴影颜色
+      shadowColor: themeProvider.isDark()
+          ? Colors.transparent
+          : Colors.grey[100], // 阴影颜色
       child: Container(
         padding: const EdgeInsets.only(left: 20),
         alignment: Alignment.centerLeft,
         height: 40,
-        color: Colors.white,
+        color: themeProvider.isDark() ? Colors.transparent : Colors.white,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

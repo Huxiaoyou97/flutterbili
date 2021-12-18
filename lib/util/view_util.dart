@@ -1,7 +1,16 @@
+import 'dart:io';
+
+import 'package:bilibili/navigator/hi_navigator.dart';
+import 'package:bilibili/page/profile_page.dart';
+import 'package:bilibili/page/video_detail_page.dart';
+import 'package:bilibili/provider/theme_provider.dart';
+import 'package:bilibili/util/color.dart';
 import 'package:bilibili/util/format_util.dart';
 import 'package:bilibili/widget/navigation_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import "package:provider/provider.dart";
 
 ///带缓存的image
 Widget cachedImage(String url, {double width, double height}) {
@@ -40,8 +49,42 @@ blackLinearGradient({bool fromTop = false}) {
 
 /// 修改状态栏
 void changeStatusBar(
-    {color: Colors.white, StatusStyle statusStyle: StatusStyle.DARK_CONTENT}) {
-  // TODO 待实现
+    {color: Colors.white,
+    StatusStyle statusStyle: StatusStyle.DARK_CONTENT,
+    BuildContext context}) {
+  if (context != null) {
+    var themeProvider = context.watch<ThemeProvider>();
+    if (themeProvider.isDark()) {
+      statusStyle = StatusStyle.LIGHT_CONTENT;
+      color = HiColor.dark_bg;
+    }
+  }
+
+  var page = HiNavigator.getInstance().getCurrent()?.page;
+  // fix Android切换 profile页面状态栏变白问题
+  if (page is ProfilePage) {
+    color = Colors.transparent;
+  } else if (page is VideoDetailPage) {
+    color = Colors.black;
+    statusStyle = StatusStyle.LIGHT_CONTENT;
+  }
+
+  //沉浸式状态栏样式
+  var brightness;
+  if (Platform.isIOS) {
+    brightness = statusStyle == StatusStyle.LIGHT_CONTENT
+        ? Brightness.dark
+        : Brightness.light;
+  } else {
+    brightness = statusStyle == StatusStyle.LIGHT_CONTENT
+        ? Brightness.light
+        : Brightness.dark;
+  }
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
+    statusBarColor: Colors.transparent,
+    statusBarBrightness: brightness,
+    statusBarIconBrightness: brightness,
+  ));
 }
 
 /// 带文字的小图标
@@ -83,7 +126,13 @@ SizedBox hiSpace({double height = 1, double width = 1}) {
 }
 
 // 底部阴影
-BoxDecoration bottomBoxShadow() {
+BoxDecoration bottomBoxShadow(BuildContext context) {
+  var themeProvider = context.watch<ThemeProvider>();
+
+  if (themeProvider.isDark()) {
+    return null;
+  }
+
   return BoxDecoration(color: Colors.white, boxShadow: [
     BoxShadow(
       color: Colors.grey[100],

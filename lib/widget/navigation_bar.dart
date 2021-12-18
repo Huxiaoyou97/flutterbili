@@ -1,5 +1,8 @@
+import 'package:bilibili/provider/theme_provider.dart';
+import 'package:bilibili/util/color.dart';
 import 'package:bilibili/util/view_util.dart';
 import 'package:flutter/material.dart';
+import "package:provider/provider.dart";
 
 enum StatusStyle { LIGHT_CONTENT, DARK_CONTENT }
 
@@ -20,16 +23,22 @@ class NavigationBar extends StatefulWidget {
 }
 
 class _NavigationBarState extends State<NavigationBar> {
-  @override
-  void initState() {
-    super.initState();
-    _statusBarInit();
-  }
+  var _statusStyle;
+  var _color;
 
   @override
   Widget build(BuildContext context) {
     _statusBarInit();
 
+    var themeProvider = context.watch<ThemeProvider>();
+    if (themeProvider.isDark()) {
+      _color = HiColor.dark_bg;
+      _statusStyle = StatusStyle.LIGHT_CONTENT;
+    } else {
+      _color =widget.color;
+      _statusStyle = widget.statusStyle;
+    }
+    _statusBarInit();
     // 状态栏高度
     var top = MediaQuery.of(context).padding.top;
     return Container(
@@ -38,13 +47,13 @@ class _NavigationBarState extends State<NavigationBar> {
       child: widget.child,
       padding: EdgeInsets.only(top: top),
       decoration: BoxDecoration(
-        color: widget.color,
+        color: _color,
       ),
     );
   }
 
   void _statusBarInit() {
     // 沉浸式状态栏样式
-    changeStatusBar(color: widget.color, statusStyle: widget.statusStyle);
+    changeStatusBar(color: _color, statusStyle: _statusStyle);
   }
 }

@@ -3,6 +3,7 @@ import 'package:bilibili/util/color.dart';
 import 'package:bilibili/util/hi_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 extension ThemeModeExtension on ThemeMode {
   String get value => <String>["System", "Light", "Dark"][index];
@@ -10,6 +11,25 @@ extension ThemeModeExtension on ThemeMode {
 
 class ThemeProvider extends ChangeNotifier {
   ThemeMode _themeMode;
+
+  var _platformBrightness = SchedulerBinding.instance.window.platformDispatcher;
+
+  void darModeChange() {
+    if (_platformBrightness != SchedulerBinding.instance.window.platformBrightness) {
+      _platformBrightness = SchedulerBinding.instance.window.platformDispatcher;
+      notifyListeners();
+    }
+  }
+
+
+  // 判断是否为 Dark 模式
+  bool isDark() {
+    if (_themeMode == ThemeMode.system) {
+      // 获取系统Dark Mode
+      return SchedulerBinding.instance.window.platformBrightness == Brightness.dark;
+    }
+    return _themeMode == ThemeMode.dark;
+  }
 
   // 获取主题的模式
   ThemeMode getThemeMode() {
@@ -25,7 +45,7 @@ class ThemeProvider extends ChangeNotifier {
         _themeMode = ThemeMode.light;
         break;
     }
-    return _themeMode;
+    return _themeMode = ThemeMode.system;
   }
 
   // 设置主题
@@ -39,12 +59,13 @@ class ThemeProvider extends ChangeNotifier {
     var themeData = ThemeData(
       brightness: isDarkMode ? Brightness.dark : Brightness.light,
       errorColor: isDarkMode ? HiColor.dark_red : HiColor.red,
-      primaryColor: isDarkMode ? HiColor.dark_bg : Colors.white,
-      accentColor: isDarkMode ? primary[50] : Colors.white,
+      primaryColor: isDarkMode ? HiColor.dark_bg : white,
+      accentColor: isDarkMode ? primary[50] : white,
       // Tab 指示器的颜色
-      indicatorColor: isDarkMode ? primary[50] : Colors.white,
+      indicatorColor: isDarkMode ? primary[50] : white,
       // 页面背景色
-      scaffoldBackgroundColor: isDarkMode ? HiColor.dark_bg : Colors.white,
+      scaffoldBackgroundColor: isDarkMode ? HiColor.dark_bg : white,
+      primarySwatch: white,
     );
 
     return themeData;

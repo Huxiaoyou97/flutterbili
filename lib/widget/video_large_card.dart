@@ -72,7 +72,7 @@ class VideoLargeCard extends StatelessWidget {
             videoModel.title,
             style: const TextStyle(
               fontSize: 12,
-              color: Colors.black87,
+              // color: Colors.black87,
             ),
           ),
           _buildBottomContent(),

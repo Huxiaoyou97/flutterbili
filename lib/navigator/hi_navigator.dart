@@ -79,6 +79,10 @@ class HiNavigator extends _RouteJumpListener {
     return _instance;
   }
 
+  RouteStatusInfo getCurrent() {
+    return _current;
+  }
+
   Future<bool> openH5(String url) async {
     var result = await canLaunch(url);
     if (result) {

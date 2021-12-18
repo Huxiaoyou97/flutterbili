@@ -2,6 +2,7 @@ import 'package:bilibili/dao/login_dao.dart';
 import 'package:bilibili/db/hi_cache.dart';
 import 'package:bilibili/http/core/hi_error.dart';
 import 'package:bilibili/navigator/hi_navigator.dart';
+import 'package:bilibili/provider/theme_provider.dart';
 import 'package:bilibili/util/string_util.dart';
 import 'package:bilibili/util/toast.dart';
 import 'package:bilibili/widget/appbar.dart';
@@ -9,6 +10,7 @@ import 'package:bilibili/widget/login_button.dart';
 import 'package:bilibili/widget/login_effect.dart';
 import 'package:bilibili/widget/login_input.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key key}) : super(key: key);
@@ -42,6 +44,7 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar("注册", "登录", () {
+        context.read<ThemeProvider>().setTheme(ThemeMode.light);
         HiNavigator.getInstance().onJumpTo(RouteStatus.login);
       }),
       body: Container(

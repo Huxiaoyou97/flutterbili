@@ -1,3 +1,4 @@
+import 'package:bilibili/util/color.dart';
 import 'package:bilibili/util/view_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

@@ -105,7 +105,7 @@ class _LoginInputState extends State<LoginInput> {
       cursorColor: primary,
       controller: widget.editingController,
       style: const TextStyle(
-          fontSize: 16, color: Colors.black, fontWeight: FontWeight.w300),
+          fontSize: 16, fontWeight: FontWeight.w300),
       // 输入框的样式
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.only(left: 20, right: 20),

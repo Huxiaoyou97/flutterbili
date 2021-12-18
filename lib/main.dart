@@ -5,10 +5,11 @@ import 'package:bilibili/page/login_page.dart';
 import 'package:bilibili/page/notice_page.dart';
 import 'package:bilibili/page/register_page.dart';
 import 'package:bilibili/page/video_detail_page.dart';
+import 'package:bilibili/provider/hi_provider.dart';
 import 'package:bilibili/provider/theme_provider.dart';
-import 'package:bilibili/util/color.dart';
 import 'package:bilibili/util/toast.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'model/home_model.dart';
 import 'model/video_model.dart';
@@ -31,27 +32,38 @@ class _BiliAppState extends State<BiliApp> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<HiCache>(
+      /// 进行初始化
+      future: HiCache.preInit(),
+      builder: (BuildContext context, AsyncSnapshot<HiCache> snapshot) {
+        var widget = snapshot.connectionState == ConnectionState.done
+            ? Router(
+                routerDelegate: _routeDelegate,
+              )
+            : const Scaffold(
+                body: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
 
-        /// 进行初始化
-        future: HiCache.preInit(),
-        builder: (BuildContext context, AsyncSnapshot<HiCache> snapshot) {
-          var widget = snapshot.connectionState == ConnectionState.done
-              ? Router(
-                  routerDelegate: _routeDelegate,
-                )
-              : const Scaffold(
-                  body: Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                );
-
-          return MaterialApp(
-            home: widget,
-            theme: ThemeProvider().getTheme(),
-            darkTheme: ThemeProvider().getTheme(isDarkMode: true),
-            themeMode: ThemeProvider().getThemeMode(),
-          );
-        });
+        return MultiProvider(
+          providers: topProviders,
+          child: Consumer<ThemeProvider>(
+            builder: (
+              BuildContext context,
+              ThemeProvider themeProvider,
+              Widget child,
+            ) {
+              return MaterialApp(
+                home: widget,
+                theme: themeProvider.getTheme(),
+                darkTheme: themeProvider.getTheme(isDarkMode: true),
+                themeMode: themeProvider.getThemeMode(),
+              );
+            },
+          ),
+        );
+      },
+    );
   }
 }
 

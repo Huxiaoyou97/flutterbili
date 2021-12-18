@@ -1,6 +1,8 @@
+import 'package:bilibili/provider/theme_provider.dart';
 import 'package:bilibili/util/color.dart';
 import 'package:flutter/material.dart';
 import 'package:underline_indicator/underline_indicator.dart';
+import "package:provider/provider.dart";
 
 /// 顶部 tab 切换
 class HiTab extends StatelessWidget {
@@ -29,12 +31,17 @@ class HiTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    var themeProvider = context.watch<ThemeProvider>();
+
+    var _unselectedLabelColor = themeProvider.isDark() ? Colors.grey : unselectedLabelColor;
+
     return TabBar(
       controller: controller,
       isScrollable: true,
       //  tabBar是否可以滚动
       labelColor: primary,
-      unselectedLabelColor: unselectedLabelColor,
+      unselectedLabelColor: _unselectedLabelColor,
       labelStyle: TextStyle(fontSize: fontSize),
       indicator: UnderlineIndicator(
         strokeCap: StrokeCap.round,

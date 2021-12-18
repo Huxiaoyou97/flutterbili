@@ -7,12 +7,14 @@ import 'package:bilibili/navigator/hi_navigator.dart';
 import 'package:bilibili/page/home_tab_page.dart';
 import 'package:bilibili/page/profile_page.dart';
 import 'package:bilibili/page/video_detail_page.dart';
+import 'package:bilibili/provider/theme_provider.dart';
 import 'package:bilibili/util/toast.dart';
 import 'package:bilibili/util/view_util.dart';
 import 'package:bilibili/widget/hi_tab.dart';
 import 'package:bilibili/widget/loading_container.dart';
 import 'package:bilibili/widget/navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   final ValueChanged<int> onJumpTo;
@@ -77,6 +79,13 @@ class _HomePageState extends HIState<HomePage>
     super.dispose();
   }
 
+  // 监听系统DarkMode变化
+  @override
+  void didChangePlatformBrightness() {
+    context.read<ThemeProvider>().darModeChange();
+    super.didChangePlatformBrightness();
+  }
+
   /// 监听应用生周期变化
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
@@ -121,7 +130,7 @@ class _HomePageState extends HIState<HomePage>
             Container(
               // color: Colors.white,
               child: _tabBar(),
-              decoration: bottomBoxShadow(),
+              decoration: bottomBoxShadow(context),
             ),
             Flexible(
               child: TabBarView(
