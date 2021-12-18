@@ -5,6 +5,7 @@ import 'package:bilibili/page/login_page.dart';
 import 'package:bilibili/page/notice_page.dart';
 import 'package:bilibili/page/register_page.dart';
 import 'package:bilibili/page/video_detail_page.dart';
+import 'package:bilibili/provider/theme_provider.dart';
 import 'package:bilibili/util/color.dart';
 import 'package:bilibili/util/toast.dart';
 import 'package:flutter/material.dart';
@@ -46,7 +47,9 @@ class _BiliAppState extends State<BiliApp> {
 
           return MaterialApp(
             home: widget,
-            theme: ThemeData(primarySwatch: white),
+            theme: ThemeProvider().getTheme(),
+            darkTheme: ThemeProvider().getTheme(isDarkMode: true),
+            themeMode: ThemeProvider().getThemeMode(),
           );
         });
   }

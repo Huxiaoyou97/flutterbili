@@ -27,12 +27,15 @@ class VideoView extends StatefulWidget {
 
   final Widget overlayUI;
 
+  final Widget barrageUI;
+
   VideoView(this.url,
       {this.cover,
       this.autoPlay = false,
       this.looping = false,
       this.aspectRatio = 16 / 9,
-      this.overlayUI});
+      this.overlayUI,
+      this.barrageUI});
 
   @override
   _VideoViewState createState() => _VideoViewState();
@@ -75,6 +78,7 @@ class _VideoViewState extends State<VideoView> {
           showBigPlayIcon: false,
           bottomGradient: blackLinearGradient(),
           overlayUI: widget.overlayUI,
+          barrageUI: widget.barrageUI,
         ),
         materialProgressColors: _progressColors);
 

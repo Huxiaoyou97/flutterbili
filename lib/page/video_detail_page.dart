@@ -1,5 +1,8 @@
 import 'dart:io';
 
+import 'package:bilibili/barrage/barrage_input.dart';
+import 'package:bilibili/barrage/barrage_switch.dart';
+import 'package:bilibili/barrage/hi_barrage.dart';
 import 'package:bilibili/barrage/hi_socket.dart';
 import 'package:bilibili/dao/favorites_dao.dart';
 import 'package:bilibili/dao/like_dao.dart';
@@ -19,6 +22,7 @@ import 'package:bilibili/widget/video_large_card.dart';
 import 'package:bilibili/widget/video_toolbar.dart';
 import 'package:bilibili/widget/video_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_overlay/flutter_overlay.dart';
 
 class VideoDetailPage extends StatefulWidget {
   final VideoModel videoModel;
@@ -41,7 +45,9 @@ class _VideoDetailPageState extends State<VideoDetailPage>
 
   List<VideoModel> videoList = [];
 
-  HiSocket _hiSocket;
+  final _barrageKey = GlobalKey<HiBarrageState>();
+
+  bool _inoutShowing = false;
 
   @override
   void initState() {
@@ -53,14 +59,12 @@ class _VideoDetailPageState extends State<VideoDetailPage>
 
     _controller = TabController(length: tabs.length, vsync: this);
     videoModel = widget.videoModel;
-    _initSocket();
     _loadDetail();
   }
 
   @override
   void dispose() {
     _controller.dispose();
-    _hiSocket.close();
     super.dispose();
   }
 
@@ -106,6 +110,11 @@ class _VideoDetailPageState extends State<VideoDetailPage>
       cover: model.cover,
       autoPlay: false,
       overlayUI: videoAppBar(),
+      barrageUI: HiBarrage(
+        key: _barrageKey,
+        vid: model.id,
+        autoPlay: true,
+      ),
     );
   }
 
@@ -123,13 +132,7 @@ class _VideoDetailPageState extends State<VideoDetailPage>
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             _tabBar(),
-            const Padding(
-              padding: EdgeInsets.only(right: 20),
-              child: Icon(
-                Icons.live_tv_rounded,
-                color: Colors.grey,
-              ),
-            )
+            _buildBarrageBtn(),
           ],
         ),
       ),
@@ -258,10 +261,43 @@ class _VideoDetailPageState extends State<VideoDetailPage>
         .toList();
   }
 
-  void _initSocket() {
-    _hiSocket = HiSocket();
-    _hiSocket.open(videoModel.vid).listen((value) {
-      print("收到----$value");
-    });
+  _buildBarrageBtn() {
+    return BarrageSwitch(
+      inoutShowing: _inoutShowing,
+      onShowInput: () {
+        setState(() {
+          _inoutShowing = true;
+        });
+
+        HiOverlay.show(context, child: BarrageInput(onTabClose: () {
+          setState(() {
+            _inoutShowing = false;
+          });
+        })).then((value) {
+          print("----input$value");
+          _barrageKey.currentState.send(value);
+        });
+      },
+      onBarrageSwitch: (open) {
+        if (open) {
+          _barrageKey.currentState.play();
+        } else {
+          _barrageKey.currentState.pause();
+        }
+      },
+    );
+    // return InkWell(
+    //   onTap: () {
+    //     HiOverlay.show(context, child: BarrageInput(onTabClose: () {
+    //       setState(() {
+    //         _inoutShowing = false;
+    //       });
+    //     })).then((value) {
+    //       print("----input$value");
+    //       _barrageKey.currentState.send(value);
+    //     });
+    //   },
+    //   child:  ,
+    // );
   }
 }
