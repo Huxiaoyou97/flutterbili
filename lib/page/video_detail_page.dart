@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:bilibili/barrage/hi_socket.dart';
 import 'package:bilibili/dao/favorites_dao.dart';
 import 'package:bilibili/dao/like_dao.dart';
 import 'package:bilibili/dao/video_detail_dao.dart';
@@ -40,6 +41,8 @@ class _VideoDetailPageState extends State<VideoDetailPage>
 
   List<VideoModel> videoList = [];
 
+  HiSocket _hiSocket;
+
   @override
   void initState() {
     super.initState();
@@ -50,12 +53,14 @@ class _VideoDetailPageState extends State<VideoDetailPage>
 
     _controller = TabController(length: tabs.length, vsync: this);
     videoModel = widget.videoModel;
+    _initSocket();
     _loadDetail();
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    _hiSocket.close();
     super.dispose();
   }
 
@@ -251,5 +256,12 @@ class _VideoDetailPageState extends State<VideoDetailPage>
     return videoList
         .map((VideoModel mo) => VideoLargeCard(videoModel: mo))
         .toList();
+  }
+
+  void _initSocket() {
+    _hiSocket = HiSocket();
+    _hiSocket.open(videoModel.vid).listen((value) {
+      print("收到----$value");
+    });
   }
 }

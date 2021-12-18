@@ -2,6 +2,7 @@ import 'package:bilibili/http/core/dio_adapter.dart';
 import 'package:bilibili/http/core/hi_error.dart';
 import 'package:bilibili/http/core/hi_net_adapter.dart';
 import 'package:bilibili/http/request/base_request.dart';
+import 'package:bilibili/util/hi_constants.dart';
 
 class HiNet {
   HiNet._();
@@ -50,10 +51,10 @@ class HiNet {
   }
 
   Future<dynamic> send<T>(BaseRequest request) async {
-    request.addHeader("course-flag", "fa")
-    .addHeader("auth-token", "ZmEtMjAyMS0wNC0xMiAyMToyMjoyMC1mYQ==fa");
+    request
+        .addHeader(HiConstants.courseFlagK, HiConstants.courseFlagV)
+        .addHeader(HiConstants.authTokenKey, HiConstants.authTokenVal);
     printLog("header:${request.header}");
-
 
     HiNetAdapter adapter = DioApapter();
     return adapter.send(request);

@@ -29,9 +29,9 @@ class _HomeTabPageState
   }
 
   _banner() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 5, right: 5, bottom: 8),
-      child: HiBanner(widget.bannerList),
+    return HiBanner(
+      widget.bannerList,
+      padding: EdgeInsets.only(left: 5, right: 5, bottom: 8),
     );
   }
 
@@ -40,28 +40,28 @@ class _HomeTabPageState
 
   @override
   get contentChild => StaggeredGridView.countBuilder(
-    controller: scrollController,
-    physics: const AlwaysScrollableScrollPhysics(),
-    padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
-    crossAxisCount: 2,
-    itemCount: dataList.length + 1,
-    itemBuilder: (BuildContext context, int index) {
-      if (index == 0) {
-        return widget.bannerList != null ? _banner() : Container();
-      } else {
-        return VideoCard(
-          videoModel: dataList[index - 1],
-        );
-      }
-    },
-    staggeredTileBuilder: (int index) {
-      if (widget.bannerList != null && index == 0) {
-        return const StaggeredTile.fit(2);
-      } else {
-        return const StaggeredTile.fit(1);
-      }
-    },
-  );
+        controller: scrollController,
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
+        crossAxisCount: 2,
+        itemCount: dataList.length + 1,
+        itemBuilder: (BuildContext context, int index) {
+          if (index == 0) {
+            return widget.bannerList != null ? _banner() : Container();
+          } else {
+            return VideoCard(
+              videoModel: dataList[index - 1],
+            );
+          }
+        },
+        staggeredTileBuilder: (int index) {
+          if (widget.bannerList != null && index == 0) {
+            return const StaggeredTile.fit(2);
+          } else {
+            return const StaggeredTile.fit(1);
+          }
+        },
+      );
 
   @override
   Future<HomeModel> getData(int pageIndex) async {
