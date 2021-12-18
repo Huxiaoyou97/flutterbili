@@ -70,7 +70,7 @@ void changeStatusBar(
   }
 
   //沉浸式状态栏样式
-  var brightness;
+  Brightness brightness;
   if (Platform.isIOS) {
     brightness = statusStyle == StatusStyle.LIGHT_CONTENT
         ? Brightness.dark
