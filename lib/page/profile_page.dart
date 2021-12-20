@@ -5,6 +5,7 @@ import 'package:bilibili/util/toast.dart';
 import 'package:bilibili/util/view_util.dart';
 import 'package:bilibili/widget/bennefit_card.dart';
 import 'package:bilibili/widget/course_card.dart';
+import 'package:bilibili/widget/dark_mode_item.dart';
 import 'package:bilibili/widget/hi_banner.dart';
 import 'package:bilibili/widget/hi_blur.dart';
 import 'package:bilibili/widget/hi_fiexible_header.dart';
@@ -119,7 +120,8 @@ class _ProfilePageState extends State<ProfilePage>
       CourseCard(
         courseList: _profileModel.courseList,
       ),
-      BenefitCard(benefitList: _profileModel.benefitList,)
+      BenefitCard(benefitList: _profileModel.benefitList,),
+      DarkModeItem(),
     ];
   }
 

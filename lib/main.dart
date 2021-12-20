@@ -1,6 +1,7 @@
 import 'package:bilibili/dao/login_dao.dart';
 import 'package:bilibili/db/hi_cache.dart';
 import 'package:bilibili/navigator/hi_navigator.dart';
+import 'package:bilibili/page/dark_mode_page.dart';
 import 'package:bilibili/page/login_page.dart';
 import 'package:bilibili/page/notice_page.dart';
 import 'package:bilibili/page/register_page.dart';
@@ -58,6 +59,7 @@ class _BiliAppState extends State<BiliApp> {
                 theme: themeProvider.getTheme(),
                 darkTheme: themeProvider.getTheme(isDarkMode: true),
                 themeMode: themeProvider.getThemeMode(),
+                title: "Flutter Bili",
               );
             },
           ),
@@ -119,6 +121,8 @@ class BiliRouteDelegate extends RouterDelegate<BiliRoutePath>
       page = pageWrap(NoticePage());
     } else if (routeStatus == RouteStatus.login) {
       page = pageWrap(LoginPage());
+    } else if (routeStatus == RouteStatus.darkMode) {
+      page = pageWrap(DarkModePage());
     }
 
     /// 重新创建一个数组，否则pages因引用没有改变路由不会生效
