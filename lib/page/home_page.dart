@@ -121,7 +121,7 @@ class _HomePageState extends HIState<HomePage>
         isLoading: _isLoading,
         child: Column(
           children: <Widget>[
-            NavigationBar(
+            NavigatorBar(
               height: 50,
               child: _appBar(),
               color: Colors.white,

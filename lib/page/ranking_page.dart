@@ -49,7 +49,7 @@ class _RankingPageState extends State<RankingPage>
   }
 
   _buildNavigationBar() {
-    return NavigationBar(
+    return NavigatorBar(
       child: Container(
         alignment: Alignment.center,
         child: _tabBar(),

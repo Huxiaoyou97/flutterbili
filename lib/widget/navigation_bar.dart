@@ -6,23 +6,23 @@ import "package:provider/provider.dart";
 
 enum StatusStyle { LIGHT_CONTENT, DARK_CONTENT }
 
-class NavigationBar extends StatefulWidget {
+class NavigatorBar extends StatefulWidget {
   final StatusStyle statusStyle;
   final Color color;
   final double height;
   final Widget child;
 
-  NavigationBar(
+  NavigatorBar(
       {this.statusStyle = StatusStyle.DARK_CONTENT,
       this.color = Colors.white,
       this.height = 46,
       this.child});
 
   @override
-  _NavigationBarState createState() => _NavigationBarState();
+  _NavigatorBarState createState() => _NavigatorBarState();
 }
 
-class _NavigationBarState extends State<NavigationBar> {
+class _NavigatorBarState extends State<NavigatorBar> {
   var _statusStyle;
   var _color;
 

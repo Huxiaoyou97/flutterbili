@@ -78,7 +78,7 @@ class _FavoritePageState
   }
 
   _buildNavigationBar() {
-    return NavigationBar(
+    return NavigatorBar(
       child: Container(
         alignment: Alignment.center,
         child: const Text(

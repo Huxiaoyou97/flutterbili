@@ -80,7 +80,7 @@ class _VideoDetailPageState extends State<VideoDetailPage>
           ? Column(
               children: [
                 // IOS 黑色状态栏
-                NavigationBar(
+                NavigatorBar(
                   color: Colors.black,
                   statusStyle: StatusStyle.LIGHT_CONTENT,
                   height: Platform.isAndroid ? 0 : 46,
